@@ -8,7 +8,15 @@ Culex species identification, cqm1 analysis, and blood meal identification with 
 2. ssh u6036559@notchpeak.chpc.utah.edu        #replace with your username
 3. salloc --time=72:00:00 --ntasks 1 --mem=100G --account=saarman-np --partition=saarman-shared-np
 
-# Prepare input files  
+# Logging onto CHPC with Remote Desktop interactive job
+1. Go to "my interactive sessions" page on CHPC [CHPC](https://ondemand.chpc.utah.edu/pun/sys/dashboard/batch_connect/sessions)
+2. In the lefthand menu, choose "Interactive Desktop"
+3. Fill in dropdown menu with this info:
+   - Cluster: notchpeak
+   - Account, partition, qos: saarman-np:saarman-shared-np:saarman-np
+   - Number of cores (per node): 1
+   - Number of hours: 72             # up to 336 allowed
+   - Advanced options, mem per job: 10       # up to 100 gb
 
 ## Upload files to CHPC group1 storage
 SFTP file transfer protocol with Cyberduck worked easily.  
