@@ -157,7 +157,7 @@ def main(args):
                     ))
 
 
-
+# implements everything and loops back to the beginning main function if needed
 # Set up the parser
 parser = argparse.ArgumentParser(description='Amplicon sequencing analysis script',formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument('--index-file',type=str,help='CSV file containing fields "Sample,I1,I2"',required=True)
