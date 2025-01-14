@@ -12,12 +12,8 @@ import gzip
 
 
 # reading in files here
-# csv
-#index file
-#sample
 
-
-#input index file
+#replace index file
 
 def main(args):
 
