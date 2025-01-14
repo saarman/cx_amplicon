@@ -161,7 +161,7 @@ def main(args):
                     ))
 
 
-# for further interpretation of the vcf file, 
+
 # Set up the parser
 parser = argparse.ArgumentParser(description='Amplicon sequencing analysis script',formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument('--index-file',type=str,help='CSV file containing fields "Sample,I1,I2"',required=True)
