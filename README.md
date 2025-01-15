@@ -90,6 +90,9 @@ culex_cqm1_ace2_REF.fasta
 2. multiqc: Summarize quality results (step 3 in ddRAD)
 4. bwa index: build bwa index for reference fasta files (step 4b in ddRAD)
 5. bwa mem: assemble to reference file with .pl and .slurm commands (step 5 in ddRAD) 
-     - samclip: alignment-aware trimming, Specifically designed to remove unwanted sequences like primers or adapters from aligned reads (step not in ddRAD)
+     - samclip: alignment-aware trimming, specifically designed to remove unwanted sequences like primers or adapters from aligned reads (step not in ddRAD)
+     - samtools sort: get ready for variant calling
 6. bwa flagstat: summarize assembly results (step 6 in ddRAD)
-7. ?: variant calling
+     - sambamba: per base coverage/depth statistics  (optional extra information)
+7. freebayes: haplotype-aware variant calling (phasing included, step not in ddRAD)
+8. vcftools: filtering snps and haplotypes, or diverge entirely to analyze haplotypes
