@@ -77,3 +77,9 @@ squeue --me
 ```
 chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/cx_ddRAD*
 ```
+
+# Reference files 
+
+Ref files are saved as _REF.fasta
+The final file we plan to use for cqm1 and ace2 workflow is:  
+culex_cqm1_ace2_REF.fasta
