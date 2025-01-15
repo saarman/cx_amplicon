@@ -1,6 +1,16 @@
-Culex pip
-  cqm1: 
-  Ace2:
+
+Reference files:
+## Culex quinquefasciatus Ace2 reference sequence
+culex_quinq_ace2_REF.fasta
+  ACCN:
+
+## Culex quinquefasciatus Cqm1 reference sequence
+culex_quinq_cqm1_REF.fasta
+  ACCN:
+
+## (Optional) Culex pipiens pipiens Ace2 reference sequence
+culex_pip_ace2_REF.fasta
+
 
 Culex quinq
   cqm1: 
