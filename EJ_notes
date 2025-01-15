@@ -1,18 +1,14 @@
 
-Reference files:
+Reference files for Reference based assembly of Cqm1 and Ace2
+
 ## Culex quinquefasciatus Ace2 reference sequence
 culex_quinq_ace2_REF.fasta
-  ACCN:
+  ACCN: ON563187.1
 
 ## Culex quinquefasciatus Cqm1 reference sequence
 culex_quinq_cqm1_REF.fasta
-  ACCN:
+  ACCN: KY929304.1
 
 ## (Optional) Culex pipiens pipiens Ace2 reference sequence
 culex_pip_ace2_REF.fasta
-
-
-Culex quinq
-  cqm1: 
-  Ace2:
-
+  ACCN: JF430595.1
