@@ -88,7 +88,8 @@ culex_cqm1_ace2_REF.fasta
  
 1. fastqc: Read quality (step 2 in ddRAD)
 2. multiqc: Summarize quality results (step 3 in ddRAD)
-3. bwa index: build bwa index for reference fasta files (step 4b in ddRAD)
-4. bwa mem: assemble to reference file with .pl and .slurm commands (step 5 in ddRAD)
-5. bwa flagstat: summarize assembly results (step 6 in ddRAD)
-6. ?: variant calling
+4. bwa index: build bwa index for reference fasta files (step 4b in ddRAD)
+5. bwa mem: assemble to reference file with .pl and .slurm commands (step 5 in ddRAD) 
+     - samclip: alignment-aware trimming, Specifically designed to remove unwanted sequences like primers or adapters from aligned reads (step not in ddRAD)
+6. bwa flagstat: summarize assembly results (step 6 in ddRAD)
+7. ?: variant calling
