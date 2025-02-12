@@ -94,5 +94,7 @@ culex_cqm1_ace2_REF.fasta
      - samtools sort: get ready for variant calling
 6. bwa flagstat: summarize assembly results (step 6 in ddRAD)
      - sambamba: per base coverage/depth statistics  (optional extra information)
+     - samtools idxstats aligned.bam  # summary of how many reads aligned to each genus (optional extra information)
+     - samtools view -b -q 30 aligned.bam > high_confidence_alignments.bam # filter out low-confidence mappings (optional extra information)
 7. freebayes: haplotype-aware variant calling (phasing included, step not in ddRAD)
-8. vcftools: filtering snps and haplotypes, or diverge entirely to analyze haplotypes
+8. vcftools: filtering snps and haplotypes, or diverge entirely to analyze haplotypes (optional extra information)
