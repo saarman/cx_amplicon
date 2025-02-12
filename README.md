@@ -98,3 +98,44 @@ culex_cqm1_ace2_REF.fasta
      - samtools view -b -q 30 aligned.bam > high_confidence_alignments.bam # filter out low-confidence mappings (optional extra information)
 7. freebayes: haplotype-aware variant calling (phasing included, step not in ddRAD)
 8. vcftools: filtering snps and haplotypes, or diverge entirely to analyze haplotypes (optional extra information)
+
+
+# Directory structure:
+
+## Raw files from uphl .fastq.gz
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_raw                     
+
+ ## Note that references will be on github 
+ So will be pulled down into the cx_amplicon_scripts folders
+
+ ## Emily's 
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EC  
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EC/cx_amplicon_bwa
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EC/cx_amplicon_fastqc
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EC/cx_amplicon_scripts
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EC/cx_amplicon_vcf
+ ## Eric's
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EJ  
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EJ/cx_amplicon_bwa
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EJ/cx_amplicon_fastqc
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EJ/cx_amplicon_scripts
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EJ/cx_amplicon_vcf
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EC/cx_amplicon_vcf
+ ## Matt's 
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_MY
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_MY/cx_amplicon_bwa
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_MY/cx_amplicon_fastqc
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_MY/cx_amplicon_scripts
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_MY/cx_amplicon_vcf
+ ## Katie's
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_KG
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_KG/cx_amplicon_bwa
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_KG/cx_amplicon_fastqc
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_KG/cx_amplicon_scripts
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_KG/cx_amplicon_vcf
+ ## Tyler's
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_TS
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_TS/cx_amplicon_bwa
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_TS/cx_amplicon_fastqc
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_TS/cx_amplicon_scripts
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_TS/cx_amplicon_vcf
