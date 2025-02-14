@@ -20,8 +20,8 @@
 module load fastqc/0.12.1
 
 # Input and output files
-input_folder="/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_processed/"
-output_folder="/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_fastqc/"
+input_folder="/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_raw/"
+output_folder="/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EC/cx_amplicon_fastqc/"
 
 # Create the output folder if it doesn't exist
 mkdir -p "$output_folder"
