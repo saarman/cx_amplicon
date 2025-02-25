@@ -49,7 +49,7 @@ chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/cx_ddRAD*
 
 ## Github
 ***Run just ONCE: Clone from Github***  
-Before running, I need to make these files on github, and then use git to clone
+Before running, you need to make these files on github, and then use git to clone
 ```
 # Just once:
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EC              #Example for Emily with "EC"
