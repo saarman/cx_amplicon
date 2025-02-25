@@ -1,0 +1,18 @@
+Trying to git clone onto CHPC and got this error 
+
+[u1055819@notchpeak1 cx_amplicon_EC]$ git clone https://github.com/saarman/cx_amplicon_scripts cx_amplicon_scripts
+Cloning into 'cx_amplicon_scripts'...
+(gnome-ssh-askpass:1991371): Gtk-WARNING **: 14:19:47.709: cannot open display: 
+error: unable to read askpass response from '/usr/libexec/openssh/gnome-ssh-askpass'
+Username for 'https://github.com': emcal23
+(gnome-ssh-askpass:2046705): Gtk-WARNING **: 14:20:15.321: cannot open display: 
+error: unable to read askpass response from '/usr/libexec/openssh/gnome-ssh-askpass'
+Password for 'https://emcal23@github.com': 
+remote: Support for password authentication was removed on August 13, 2021.
+remote: Please see https://docs.github.com/get-started/getting-started-with-git/about-remote-repositories#cloning-with-https-urls for information on cur
+rently recommended modes of authentication.
+fatal: Authentication failed for 'https://github.com/saarman/cx_amplicon_scripts/'
+[u1055819@notchpeak1 cx_amplicon_EC]$ git clone https://github.com/saarman/cx_amplicon_scripts cx_amplicon_scripts
+Cloning into 'cx_amplicon_scripts'...
+(gnome-ssh-askpass:2442071): Gtk-WARNING **: 14:23:39.870: cannot open display: 
+error: unable to read askpass response from '/usr/libexec/openssh/gnome-ssh-askpass'
