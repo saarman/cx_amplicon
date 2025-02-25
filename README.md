@@ -52,8 +52,8 @@ chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/cx_ddRAD*
 Before running, I need to make these files on github, and then use git to clone
 ```
 # Just once:
-cd /uufs/chpc.utah.edu/common/home/saarman-group1/ 
-git clone https://github.com/saarman/cx_ddRAD_scripts cx_ddRAD_scripts
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EC/cx_amplicon_scripts
+git clone https://github.com/saarman/cx_ddRAD_scripts cx_amplicon_scripts
 ```
 ***Need to run every time: Pull any changes from Github***  
 ```
