@@ -75,7 +75,7 @@ squeue --me
 
 ## Change permissions (again)
 ```
-chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/cx_ddRAD*
+chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/cx_*
 ```
 
 # Reference files 
