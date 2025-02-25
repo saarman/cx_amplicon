@@ -57,7 +57,7 @@ git clone https://github.com/saarman/cx_amplicon_scripts cx_amplicon_scripts
 ```
 ***Need to run every time: Pull any changes from Github***  
 ```
-cd /uufs/chpc.utah.edu/common/home/saarman-group1/cx_ddRAD_scripts/
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_scripts/
 git pull
 ```
 ***Need to run every time: Submit to slurm***
