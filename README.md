@@ -53,7 +53,7 @@ Before running, you need to make these files on github, and then use git to clon
 ```
 # Just once:
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EC              #Example for Emily with "EC"
-git clone https://github.com/saarman/cx_amplicon_scripts cx_amplicon_scripts
+git clone https://github.com/saarman/cx_amplicon cx_amplicon_scripts
 ```
 ***Need to run every time: Pull any changes from Github***  
 ```
