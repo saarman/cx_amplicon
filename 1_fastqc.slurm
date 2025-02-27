@@ -24,8 +24,8 @@ input_folder="/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_raw/"
 output_folder="./../cx_amplicon_fastqc/"
 
 # Create the output folder if it doesn't exist
-mkdir -p "$output_folder"
-chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon*
+# mkdir -p "$output_folder"
+# chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon*
 
 # Run FastQC on all FASTQ files in the input folder
 for fastq_file in "$input_folder"/*.fq*; do
