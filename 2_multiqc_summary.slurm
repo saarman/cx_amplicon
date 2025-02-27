@@ -21,7 +21,7 @@ module load  multiqc/1.12
 
 # Input and output files
 in_path="/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EC/cx_amplicon_fastqc/"
-outdir="/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EC/cx_amplicon_fastqc/multiqc/"
+outdir="./../multiqc/"
 
 # Create the output folder if it doesn't exist
 mkdir -p "$outdir"
