@@ -12,7 +12,7 @@
 # #SBATCH --mail-user=emily.calhoun@usu.edu   # email address
 # #SBATCH --mail-type=BEGIN
 # #SBATCH --mail-type=END
-$ #SBATCH --mail-type=FAIL
+# #SBATCH --mail-type=FAIL
 
 # LOAD MODULES, INSERT CODE, AND RUN YOUR PROGRAMS HERE
 
