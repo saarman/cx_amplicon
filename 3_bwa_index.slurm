@@ -22,7 +22,7 @@ module load bwa/2020_03_19
 
 # Replace these variables with the actual paths and filenames
 input_folder="/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_raw"
-output_folder="/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EC/cx_amplicon_bwa/ref/"
+output_folder="./../cx_amplicon_bwa/ref/"
 
 # Permissions
 chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon*
