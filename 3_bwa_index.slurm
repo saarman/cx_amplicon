@@ -7,12 +7,12 @@
 #SBATCH --time=24:00:00   # walltime limit (HH:MM:SS)
 #SBATCH --mem=24576 # memory given in MB
 #SBATCH --nodes=1   # number of nodes
-#SBATCH --ntasks-per-node=16   # 20 processor core(s) per node X 2 threads per core
+# #SBATCH --ntasks-per-node=16   # 20 processor core(s) per node X 2 threads per core
 #SBATCH --job-name="bwa-ref"
-#SBATCH --mail-user=emily.calhoun@usu.edu    # email address
-#SBATCH --mail-type=BEGIN
-#SBATCH --mail-type=END
-#SBATCH --mail-type=FAIL
+# #SBATCH --mail-user=emily.calhoun@usu.edu    # email address
+# #SBATCH --mail-type=BEGIN
+# #SBATCH --mail-type=END
+# #SBATCH --mail-type=FAIL
 
 # LOAD MODULES, INSERT CODE, AND RUN YOUR PROGRAMS HERE
 
@@ -25,7 +25,7 @@ input_folder="/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_raw"
 output_folder="/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EC/cx_amplicon_bwa/ref/"
 
 # Permissions
-chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/cx_ddRAD*
+chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon*
 
 # Index reference
 cd $output_folder
@@ -33,4 +33,4 @@ bwa index -a bwtsw Cpip29_nodeb_gfill_mito.fasta
 #bwa-mem2 index Cpip29_nodeb_gfill_mito.fasta
 
 # Permissions
-chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/cx_ddRAD*
+chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon*
