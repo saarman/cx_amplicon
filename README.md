@@ -25,7 +25,7 @@ Server: notchpeak
 User: u6036559  
 Port: 21  
 Drag and drop from local disk.  
-/uufs/chpc.utah.edu/common/home/saarman-group1/cx_ddRAD_raw  
+/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_raw  
 
 ## To unzip a .tar file (Norah completed 11/8/2024):
 ```
@@ -42,7 +42,7 @@ mv ./data/Saarman/ddRAD/ddRAD.fastq.gz ./cx_ddRAD_plate2.fastq.gz
 
 ## Change permissions
 ```
-chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/cx_ddRAD*
+chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon*
 ```
 
 # Submit your job
