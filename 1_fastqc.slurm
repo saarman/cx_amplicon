@@ -18,6 +18,7 @@
 
 # Load Module
 module load fastqc/0.12.1
+echo "module loaded"
 
 # Input and output files
 input_folder="/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_raw/"
@@ -28,11 +29,11 @@ output_folder="./../cx_amplicon_fastqc/"
 # chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon*
 
 # Run FastQC on all FASTQ files in the input folder
-for fastq_file in "$input_folder"/*.fq*; do
+for fastq_file in "$input_folder"/*.f*; do
     # Check if the file is a regular file
     if [ -f "$fastq_file" ]; then
         # Extract the file name without the path and extension
-        base_name=$(basename -s .fq "$fastq_file")
+        base_name=$(basename -s .fastq.gz "$fastq_file")
 
         # Run FastQC on the current FASTQ file
         fastqc "$fastq_file" --outdir="$output_folder"
