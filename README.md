@@ -60,11 +60,11 @@ git clone https://github.com/saarman/cx_amplicon cx_amplicon_scripts
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_scripts/
 git pull
 ```
-***Need to run every time: Submit to slurm***
+***Need to run every time to Submit to slurm (change file for each step)***
 https://www.chpc.utah.edu/documentation/software/slurm.php#usingslurm
 ```
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_scripts/
-sbatch 1a_process_radtags.slurm
+sbatch 1_fastqc.slurm
 ```
 
 ##  Checking the status of your job
@@ -75,7 +75,7 @@ squeue --me
 
 ## Change permissions (again)
 ```
-chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/cx_*
+chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_*
 ```
 
 # Reference files 
