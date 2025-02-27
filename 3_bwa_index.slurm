@@ -24,7 +24,8 @@ module load bwa/2020_03_19
 input_folder="/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_raw"
 output_folder="./../cx_amplicon_bwa/ref/"
 
-# Permissions
+# Create the output folder if it doesn't exist
+mkdir -p "$outdir"
 chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon*
 
 # Index reference
