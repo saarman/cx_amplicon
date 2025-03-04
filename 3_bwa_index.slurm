@@ -33,7 +33,7 @@ chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon*
 
 # Index reference
 cd $output_folder
-bwa index -a bwtsw Cpip29_nodeb_gfill_mito.fasta
+bwa index -a bwtsw Cpip29_nodeb_gfill_mito.fasta         #cannot find this reference file... where is it? which should I be using?
 #bwa-mem2 index Cpip29_nodeb_gfill_mito.fasta
 
 # Permissions
