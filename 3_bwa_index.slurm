@@ -20,6 +20,9 @@
 module load bwa/2020_03_19
 #module load bwa-mem/2.2.1
 
+#change permissions 
+chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon*
+
 # Replace these variables with the actual paths and filenames
 input_folder="/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_raw"
 output_folder="./../cx_amplicon_bwa/ref/"
