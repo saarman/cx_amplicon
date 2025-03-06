@@ -14,10 +14,10 @@ my $genome = "/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EC/cx_a
 my $output_dir = "/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_bwa";
 
 # Path to samtools
-my $samtools = "/uufs/chpc.utah.edu/sys/installdir/samtools/1.16/bin/samtools";
+my $samtools = "/uufs/chpc.utah.edu/sys/installdir/samtools/1.16/bin/samtools"; # module load samtools/1.16; which samtools
 
-# Path to bwa-mem2 binary
-my $bwa = "/uufs/chpc.utah.edu/sys/installdir/bwa/2020_03_19/bin/bwa";  
+# Path to bwa-mem2 binary, find this with: 
+my $bwa = "/uufs/chpc.utah.edu/sys/installdir/bwa/2020_03_19/bin/bwa"; # module load bwa/2020_03_19; which bwa
 
 FILES:
 foreach my $fq1 (@ARGV) {  # Iterate over each file passed as an argument
