@@ -24,7 +24,7 @@ module load bwa/2020_03_19
 chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon*
 
 # Replace these variables with the actual paths and filenames
-input_folder="/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_raw"
+input_folder="/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_scripts"
 output_folder="./../cx_amplicon_bwa/ref/"
 
 # Create the output folder if it doesn't exist
@@ -33,7 +33,7 @@ chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon*
 
 # Index reference
 cd $output_folder
-bwa index -a bwtsw Cpip29_nodeb_gfill_mito.fasta         # is this the correct ref file I should be using?
+bwa index -a bwtsw Rep_Genera_Mito.fasta    
 #bwa-mem2 index Cpip29_nodeb_gfill_mito.fasta
 
 # Permissions
