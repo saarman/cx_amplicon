@@ -8,7 +8,7 @@ my $max = 20;  # Set the maximum number of parallel processes to 1 for testing, 
 my $pm = Parallel::ForkManager->new($max);  # Create a new Parallel::ForkManager object with the specified maximum
 
 # Path to the reference file
-my $ref = "/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EC/cx_amplicon_scripts/Rep_Genera_Mito.fasta";
+my $ref = "/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EC/cx_amplicon_bwa/ref/Rep_Genera_Mito.fasta";
 
 # Path to the primers file
 my $primers = "/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EC/cx_amplicon_scripts/primers.fasta";
