@@ -20,20 +20,18 @@
 module load bwa/2020_03_19
 #module load bwa-mem/2.2.1
 
-#change permissions 
-chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon*
-
 # Replace these variables with the actual paths and filenames
-input_folder="/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_scripts"
+input_ref="Rep_Genera_Mito.fasta"
 output_folder="./../cx_amplicon_bwa/ref/"
 
-# Create the output folder if it doesn't exist
-mkdir -p "$outdir"
+# Create the output folder if it doesn't exist, copy fasta file  into output
+mkdir -p ${output_folder}
+cp $input_ref ${output_folder}/${input_ref}
 chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon*
 
 # Index reference
 cd $output_folder
-bwa index -a bwtsw Rep_Genera_Mito.fasta    
+bwa index -a bwtsw $input_ref    
 #bwa-mem2 index Cpip29_nodeb_gfill_mito.fasta
 
 # Permissions
