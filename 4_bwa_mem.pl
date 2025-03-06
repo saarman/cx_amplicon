@@ -19,19 +19,32 @@ my $output_dir = "/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_bwa
 # Path to samtools
 my $samtools = "/uufs/chpc.utah.edu/sys/installdir/samtools/1.16/bin/samtools"; # module load samtools/1.16; which samtools
 
-# Path to bwa-mem2 binary, find this with: 
+# Path to bwa-mem2 binary
 my $bwa = "/uufs/chpc.utah.edu/sys/installdir/bwa/2020_03_19/bin/bwa"; # module load bwa/2020_03_19; which bwa
 
+# Store paired-end read files
+my %pairs;
+
+# Identify paired-end reads
+foreach my $file (@ARGV) {
+    if ($file =~ m/^(.+)_R[12]_001\.fastq\.gz$/) {
+        my $sample_id = $1;
+        push @{ $pairs{$sample_id} }, $file;
+    }
+}
+
 FILES:
-foreach my $fq1 (@ARGV) {  # Iterate over each file passed as an argument
+foreach my $ind (keys %pairs) {
+    my @files = @{ $pairs{$ind} };
+    
+    # Ensure both R1 and R2 exist
+    next unless @files == 2;
+    my ($fq1, $fq2) = sort @files;  # Ensure correct ordering (R1 first, R2 second)
+
     $pm->start and next FILES;  # Fork a new process and move to the next file if in the parent process
 
-    # Extract the identifier from the filename
-    $fq1 =~ m/([A-Za-z_\-0-9]+)\.fq\.gz$/ or die "failed match for file $fq1\n";
-    my $ind = $1;  # Store the identifier in $ind
-
-    # Run the BWA-MEM2 alignment and process with samtools, could add -K 1000000 -c 1000 to reduce mem?
-    my $cmd = "$bwa mem -M -t 1 $ref $fq1 | samclip --ref $primers --max 50 | $samtools view -b | $samtools sort --threads 1 > ${output_dir}/${ind}.bam";
+    # Run the BWA-MEM2 alignment with paired-end reads
+    my $cmd = "$bwa mem -M -t 1 $ref $fq1 $fq2 | samclip --ref $primers --max 50 | $samtools view -b | $samtools sort --threads 1 > ${output_dir}/${ind}.bam";
     system($cmd) == 0 or die "system $cmd failed: $?";
 
     print "Alignment completed for $ind\n";
@@ -40,7 +53,6 @@ foreach my $fq1 (@ARGV) {  # Iterate over each file passed as an argument
 }
 
 $pm->wait_all_children;  # Wait for all child processes to finish
-
 
 
 
