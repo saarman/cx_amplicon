@@ -7,8 +7,11 @@ use Parallel::ForkManager;
 my $max = 20;  # Set the maximum number of parallel processes to 1 for testing, target is 20
 my $pm = Parallel::ForkManager->new($max);  # Create a new Parallel::ForkManager object with the specified maximum
 
-# Path to the reference genome file
-my $genome = "/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EC/cx_amplicon_scripts/Rep_Genera_Mito.fasta";
+# Path to the reference file
+my $ref = "/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EC/cx_amplicon_scripts/Rep_Genera_Mito.fasta";
+
+# Path to the primers file
+my $primers = "/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EC/cx_amplicon_scripts/primers.fasta";
 
 # Output directory
 my $output_dir = "/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_bwa";
@@ -28,7 +31,7 @@ foreach my $fq1 (@ARGV) {  # Iterate over each file passed as an argument
     my $ind = $1;  # Store the identifier in $ind
 
     # Run the BWA-MEM2 alignment and process with samtools, could add -K 1000000 -c 1000 to reduce mem?
-    my $cmd = "$bwa mem -M -t 1 $genome $fq1 | $samtools view -b | $samtools sort --threads 1 > ${output_dir}/${ind}.bam";
+    my $cmd = "$bwa mem -M -t 1 $ref $fq1 | samclip --ref $primers --max 50 | $samtools view -b | $samtools sort --threads 1 > ${output_dir}/${ind}.bam";
     system($cmd) == 0 or die "system $cmd failed: $?";
 
     print "Alignment completed for $ind\n";
