@@ -7,14 +7,14 @@ use Parallel::ForkManager;
 my $max = 20;  # Set the maximum number of parallel processes to 1 for testing, target is 20
 my $pm = Parallel::ForkManager->new($max);  # Create a new Parallel::ForkManager object with the specified maximum
 
-# Path to the reference file
-my $ref = "/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EC/cx_amplicon_bwa/ref/Rep_Genera_Mito.fasta";
+# Path to the reference file, relative paths
+my $ref = "../cx_amplicon_bwa/ref/Rep_Genera_Mito.fasta";
 
-# Path to the primers file
-my $primers = "/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EC/cx_amplicon_scripts/primers.fasta";
+# Path to the primers file, relative paths
+my $primers = "primers.fasta";
 
-# Output directory
-my $output_dir = "/uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EJ/cx_amplicon_bwa";
+# Output directory, relative paths
+my $output_dir = "../cx_amplicon_bwa";
 
 # Path to samtools
 my $samtools = "/uufs/chpc.utah.edu/sys/installdir/samtools/1.16/bin/samtools"; # module load samtools/1.16; which samtools
