@@ -21,4 +21,4 @@ perl /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_scripts/4_bwa_me
 chmod -R g+w ../*
 
 # Resource
-
+# This is calling a perl script that uses ForkManager
