@@ -18,7 +18,7 @@ module load samtools/1.16
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_raw     #change??
 
 # Run the Perl script with the input files
-perl /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_scripts/4_bwa_mem.pl *.fq.gz
+perl /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_scripts/4_bwa_mem.pl *R1_001.fastq.gz
 
 # Permissions
 chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon*
