@@ -15,7 +15,7 @@ module load bwa/2020_03_19
 module load samtools/1.16
 
 # Run the Perl script with the input files
-perl /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_scripts/4_bwa_mem.pl ../../cx_amplicon_raw/*R1_001.fastq.gz
+perl /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EC/cx_amplicon_scripts/4_bwa_mem.pl ../../cx_amplicon_raw/*R1_001.fastq.gz
 
 # Permissions
 chmod -R g+w ../*
