@@ -18,7 +18,7 @@ module load samtools/1.16
 perl /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_EC/cx_amplicon_scripts/4_bwa_mem.pl ../../cx_amplicon_raw/*R1_001.fastq.gz
 
 # Permissions
-chmod -R g+w ../*
+# chmod -R g+w ../*  #i think this is messing the script up 
 
 # Resource
 # This is calling a perl script that uses ForkManager
