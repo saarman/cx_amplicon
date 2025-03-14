@@ -16,3 +16,15 @@ fatal: Authentication failed for 'https://github.com/saarman/cx_amplicon_scripts
 Cloning into 'cx_amplicon_scripts'...
 (gnome-ssh-askpass:2442071): Gtk-WARNING **: 14:23:39.870: cannot open display: 
 error: unable to read askpass response from '/usr/libexec/openssh/gnome-ssh-askpass'
+
+
+
+Troubleshooting 4_bwa_mem perl and slurm scripts 
+
+
+Something is getting caught up in the perl script at lines 3-32
+Tried changing  if ($file =~ m/^(.+)_R[12](?:_001)?\.fastq\.gz$/) {                  
+
+Also tried changing the and to an or 
+
+Nothing worked... getting a blank slurm script 
