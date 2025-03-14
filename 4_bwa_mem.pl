@@ -27,7 +27,7 @@ my %pairs;
 
 # Identify paired-end reads
 foreach my $file (@ARGV) {
-    if ($file =~ m/^(.+)_R[12]_001\.fastq\.gz$/) {
+   if ($file =~ m/^(.+)_R[12](?:_001)?\.fastq\.gz$/) {                       #EGC changed from if ($file =~ m/^(.+)_R[12]_001\.fastq\.gz$/) {
         my $sample_id = $1;
         push @{ $pairs{$sample_id} }, $file;
     }
@@ -41,7 +41,7 @@ foreach my $ind (keys %pairs) {
     next unless @files == 2;
     my ($fq1, $fq2) = sort @files;  # Ensure correct ordering (R1 first, R2 second)
 
-    $pm->start and next FILES;  # Fork a new process and move to the next file if in the parent process
+    $pm->start or next FILES;  # Fork a new process and move to the next file if in the parent process #EGC changed to OR - troubleshooting
 
     # Run the BWA-MEM2 alignment with paired-end reads
     my $cmd = "$bwa mem -M -t 1 $ref $fq1 $fq2 | samclip --ref $primers --max 50 | $samtools view -b | $samtools sort --threads 1 > ${output_dir}/${ind}.bam";
