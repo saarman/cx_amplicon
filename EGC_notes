@@ -19,7 +19,7 @@ error: unable to read askpass response from '/usr/libexec/openssh/gnome-ssh-askp
 
 
 
-Troubleshooting 4_bwa_mem perl and slurm scripts 
+3/14/25 - Troubleshooting 4_bwa_mem perl and slurm scripts 
 
 
 Something is getting caught up in the perl script at lines 3-32
