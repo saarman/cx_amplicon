@@ -28,3 +28,8 @@ Tried changing  if ($file =~ m/^(.+)_R[12](?:_001)?\.fastq\.gz$/) {
 Also tried changing the and to an or 
 
 Nothing worked... getting a blank slurm script 
+
+3/17/25
+
+Added a few things to the slrum and perl scripts.
+I think maybe the error is with samclip? Not able to module load it - should I reach out to CHPC to see if they vcan help?
