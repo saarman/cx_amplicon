@@ -22,6 +22,8 @@ my $samtools = "/uufs/chpc.utah.edu/sys/installdir/samtools/1.16/bin/samtools"; 
 # Path to bwa-mem2 binary
 my $bwa = "/uufs/chpc.utah.edu/sys/installdir/bwa/2020_03_19/bin/bwa"; # module load bwa/2020_03_19; which bwa
 
+#i think we might need a path similar to the above for samclip
+
 # Store paired-end read files
 my %pairs;
 
@@ -44,9 +46,10 @@ foreach my $ind (keys %pairs) {
     $pm->start and next FILES;  # Fork a new process and move to the next file if in the parent process #EGC changed to OR - troubleshooting
 
     # Run the BWA-MEM2 alignment with paired-end reads
-    my $cmd = "$bwa mem -M -t 1 $ref $fq1 $fq2 | samclip --ref $primers --max 50 | $samtools view -b | $samtools sort --threads 1 > ${output_dir}/${ind}.bam";
-    system($cmd) == 0 or die "system $cmd failed: $?";
-
+     # my $cmd = "$bwa mem -M -t 1 $ref $fq1 $fq2 | samclip --ref $primers --max 50 | $samtools view -b | $samtools sort --threads 1 > ${output_dir}/${ind}.bam";
+      my $cmd = "$bwa mem -M -t 4 $ref $fq1 $fq2 | samclip --ref $primers --max 50 | $samtools view -b | $samtools sort --threads 4 > ${output_dir}/${ind}.bam";
+       system($cmd) == 0 or die "system $cmd failed: $?";   
+    
     print "Alignment completed for $ind\n";
 
     $pm->finish;  # End the child process
