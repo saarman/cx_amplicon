@@ -4,60 +4,54 @@ use strict;
 use warnings;
 use Parallel::ForkManager;
 
-my $max = 20;  # Set the maximum number of parallel processes to 1 for testing, target is 20
-my $pm = Parallel::ForkManager->new($max);  # Create a new Parallel::ForkManager object with the specified maximum
+my $max = 20;  # Set the maximum number of parallel processes
+my $pm = Parallel::ForkManager->new($max);  # Create a new Parallel::ForkManager object
 
-# Path to the reference file, relative paths
+# Path to the reference file
 my $ref = "../cx_amplicon_bwa/ref/Rep_Genera_Mito.fasta";
 
-# Path to the primers file, relative paths
+# Path to the primers file
 my $primers = "primers.fasta";
 
-# Output directory, relative paths
+# Output directory
 my $output_dir = "../cx_amplicon_bwa";
 
 # Path to samtools
-my $samtools = "/uufs/chpc.utah.edu/sys/installdir/samtools/1.16/bin/samtools"; # module load samtools/1.16; which samtools
+my $samtools = "/uufs/chpc.utah.edu/sys/installdir/samtools/1.16/bin/samtools";
 
 # Path to bwa-mem2 binary
-my $bwa = "/uufs/chpc.utah.edu/sys/installdir/bwa/2020_03_19/bin/bwa"; # module load bwa/2020_03_19; which bwa
+my $bwa = "/uufs/chpc.utah.edu/sys/installdir/bwa/2020_03_19/bin/bwa";
 
-#i think we might need a path similar to the above for samclip
+FILES:
+foreach my $fq1 (@ARGV) {  # Iterate over each file passed as an argument
 
-# Store paired-end read files
-my %pairs;
+    # Extract the identifier from the filename
+    if ($fq1 =~ m/([A-Za-z_\-0-9]+)_R1_001\.fastq\.gz$/) {
+        my $ind = $1;  # Store the identifier in $ind
+        my $fq2 = "../../cx_amplicon_raw/${ind}_R2_001.fastq.gz";  # Construct the R2 filename
 
-# Identify paired-end reads
-foreach my $file (@ARGV) {
-   if ($file =~ m/^(.+)_R[12]_001\.fastq\.gz$/) { 
-        my $sample_id = $1;
-        push @{ $pairs{$sample_id} }, $file;
+        # Check if the paired-end file exists
+        unless (-e $fq2) {
+            warn "Paired file not found: $fq2\n";
+            next;
+        }
+
+        # Fork a process for parallel execution
+        $pm->start and next;
+
+        my $cmd = "$bwa mem -M -t 4 $ref $fq1 $fq2 | samclip --ref $primers --max 50 | $samtools view -b | $samtools sort --threads 4 > ${output_dir}/${ind}.bam";
+
+        system($cmd) == 0 or die "system $cmd failed: $?";   
+
+        print "Alignment completed for $ind\n";
+
+        $pm->finish;  # End the child process
+    } else {
+        die "Failed match for file $fq1\n";
     }
 }
 
-FILES:
-foreach my $ind (keys %pairs) {
-    my @files = @{ $pairs{$ind} };
-    
-    # Ensure both R1 and R2 exist
-    next unless @files == 2;
-    my ($fq1, $fq2) = sort @files;  # Ensure correct ordering (R1 first, R2 second)
-
-    $pm->start and next FILES;  # Fork a new process and move to the next file if in the parent process #EGC changed to OR - troubleshooting
-
-    # Run the BWA-MEM2 alignment with paired-end reads
-     # my $cmd = "$bwa mem -M -t 1 $ref $fq1 $fq2 | samclip --ref $primers --max 50 | $samtools view -b | $samtools sort --threads 1 > ${output_dir}/${ind}.bam";
-      my $cmd = "$bwa mem -M -t 4 $ref $fq1 $fq2 | samclip --ref $primers --max 50 | $samtools view -b | $samtools sort --threads 4 > ${output_dir}/${ind}.bam";
-       system($cmd) == 0 or die "system $cmd failed: $?";   
-    
-    print "Alignment completed for $ind\n";
-
-    $pm->finish;  # End the child process
-}
-
 $pm->wait_all_children;  # Wait for all child processes to finish
-
-
 
 
 # bwa-mem2 mem #options
