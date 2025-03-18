@@ -63,7 +63,7 @@ git pull
 ***Need to run every time to Submit to slurm (change file for each step)***
 https://www.chpc.utah.edu/documentation/software/slurm.php#usingslurm
 ```
-cd /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_scripts/
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_scripts
 sbatch 1_fastqc.slurm
 ```
 
