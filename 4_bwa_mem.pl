@@ -23,7 +23,7 @@ my $samtools = "/uufs/chpc.utah.edu/sys/installdir/samtools/1.16/bin/samtools";
 my $bwa = "/uufs/chpc.utah.edu/sys/installdir/bwa/2020_03_19/bin/bwa";
 
 # Path to samclip 
-my $samclip = "/uufs/chpc.utah.edu/common/home/saarman-group1/samclip";
+my $samclip = "/uufs/chpc.utah.edu/common/home/saarman-group1/samclip/samclip";
 
 FILES:
 foreach my $fq1 (@ARGV) {  # Iterate over each file passed as an argument
