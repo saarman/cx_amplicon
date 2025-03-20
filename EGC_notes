@@ -33,3 +33,10 @@ Nothing worked... getting a blank slurm script
 
 Added a few things to the slrum and perl scripts.
 I think maybe the error is with samclip? Not able to module load it - should I reach out to CHPC to see if they vcan help?
+
+
+3/20/25
+
+Tried to get samclip working but ended up not using because we think it clips too much
+
+https://github.com/tseemann/samclip
