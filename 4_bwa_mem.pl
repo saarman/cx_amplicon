@@ -42,7 +42,7 @@ foreach my $fq1 (@ARGV) {  # Iterate over each file passed as an argument
         # Fork a process for parallel execution
         $pm->start and next;
 
-        my $cmd = "$bwa mem -M -t 4 $ref $fq1 $fq2 | samclip --ref $primers --max 50 | $samtools view -b | $samtools sort --threads 4 > ${output_dir}/${ind}.bam";
+        my $cmd = "$bwa mem -M -t 4 $ref $fq1 $fq2 | $samclip --ref $primers --max 50 | $samtools view -b | $samtools sort --threads 4 > ${output_dir}/${ind}.bam";
 
         system($cmd) == 0 or die "system $cmd failed: $?";   
 
