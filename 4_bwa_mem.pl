@@ -11,7 +11,7 @@ my $pm = Parallel::ForkManager->new($max);  # Create a new Parallel::ForkManager
 my $ref = "../cx_amplicon_bwa/ref/Rep_Genera_Mito.fasta";
 
 # Path to the primers file
-my $primers = "primers.fasta";
+my $primers = "../cx_amplicon_bwa/ref/primers.fasta";
 
 # Output directory
 my $output_dir = "../cx_amplicon_bwa";
