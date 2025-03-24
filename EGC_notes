@@ -61,3 +61,18 @@ sample1_sorted.bam
 sample1_top100.bam
 -Contains only the 100 best alignments (sorted by MAPQ).
 -Header is preserved to maintain BAM format integrity.
+
+
+samtools view B002-UT-M07101-240702_S1_L001.bam | cut -f 5 | sort -nr | uniq -c
+
+Interpreting Your MAPQ Distribution
+Each line shows the number of reads that have a specific MAPQ score.
+
+Key Observations
+Most reads (11,531) have a MAPQ of 60, meaning they are highly confident alignments.
+
+Some reads have MAPQ scores in the 50s and 40s, which are still fairly good but slightly less confident.
+
+There are a small number of reads with MAPQ < 30, meaning they have lower confidence.
+
+The biggest issue: 116,580 reads have MAPQ = 0, which means they are either unaligned or multimapped (low confidence).
