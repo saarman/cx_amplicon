@@ -40,3 +40,24 @@ I think maybe the error is with samclip? Not able to module load it - should I r
 Tried to get samclip working but ended up not using because we think it clips too much
 
 https://github.com/tseemann/samclip
+
+
+3/24/25
+
+Trying a chatgpt recommended option for getting the best alignments extracted from the bam files
+Output files 
+
+1. Filtered BAM (removes primers & low-quality reads) bash
+sample1_filtered_q30.bam
+-Filtered out primer sequences (via grep -v -f "$PRIMER_FILE").
+-Removed low-quality alignments (samtools view -bq 30).
+
+2.  Sorted BAM (sorted by MAPQ)
+sample1_sorted.bam
+-Sorted alignments by MAPQ score (descending order).
+-Ensures that highest-quality alignments come first.
+
+3. Final Top 100 BAM (Best 100 Alignments)
+sample1_top100.bam
+-Contains only the 100 best alignments (sorted by MAPQ).
+-Header is preserved to maintain BAM format integrity.
