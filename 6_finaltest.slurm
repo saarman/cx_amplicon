@@ -7,7 +7,7 @@
 #SBATCH --cpus-per-task=2
 #SBATCH --array=1-100  # Adjust based on number of BAM files
 
-module load samtools  
+module load samtools/1.16  
 
 # Set paths
 BAM_DIR="./../cx_amplicon_bwa"       # Directory containing BAM files
