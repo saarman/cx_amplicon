@@ -1,11 +1,14 @@
 #!/bin/bash
-#SBATCH --job-name=best_alignments
-#SBATCH --output=best_alignments_%j.out
-#SBATCH --error=best_alignments_%j.err
-#SBATCH --time=02:00:00
-#SBATCH --mem=8G
-#SBATCH --cpus-per-task=2
-#SBATCH --array=1-100  # Adjust based on number of BAM files
+#SBATCH --time=36:00:00
+#SBATCH --nodes=1
+#SBATCH --ntasks=20         
+#SBATCH --account=saarman-np
+#SBATCH --partition=saarman-shared-np   
+#SBATCH --job-name=bwa-mem2
+# #SBATCH --mail-type=BEGIN
+# #SBATCH --mail-type=END
+# #SBATCH --mail-type=FAIL
+# #SBATCH --mail-user=emily.calhoun@usu.edu
 
 module load samtools/1.16  
 
