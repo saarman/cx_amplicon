@@ -31,10 +31,14 @@ for BAM_FILE in "$BAM_DIR"/*.bam; do
     samtools view -h "$BAM_FILE" | grep -v -f "$PRIMER_FILE" | \
         samtools view -bq "$MAPQ_THRESHOLD" -o "$OUTPUT_DIR/${BASENAME}_filtered_q${MAPQ_THRESHOLD}.bam"
 
-    # Step 2: Sort by MAPQ in descending order
-    samtools view -h "$OUTPUT_DIR/${BASENAME}_filtered_q${MAPQ_THRESHOLD}.bam" | \
-        awk 'BEGIN {OFS="\t"} /^@/ {print; next} {print | "sort -k 5nr"}' | \
-        samtools view -b -o "$OUTPUT_DIR/${BASENAME}_sorted.bam"
+    # Check if the filtered BAM file is empty
+    if [[ ! -s "$OUTPUT_DIR/${BASENAME}_filtered_q${MAPQ_THRESHOLD}.bam" ]]; then
+        echo "No valid reads after filtering for $BASENAME. Skipping..."
+        continue
+    fi
+
+    # Step 2: Sort by MAPQ in descending order (using samtools sort)
+    samtools sort -n -o "$OUTPUT_DIR/${BASENAME}_sorted.bam" "$OUTPUT_DIR/${BASENAME}_filtered_q${MAPQ_THRESHOLD}.bam"
 
     echo "Sorted BAM saved as: $OUTPUT_DIR/${BASENAME}_sorted.bam"
 
