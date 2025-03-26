@@ -42,7 +42,7 @@ for bam in *.bam; do
 
   echo "Processing $sample..."
 
-  samtools mpileup -uf "$ref" "$bam" | \
+  bcftools mpileup -f "$ref" "$bam" | \
   bcftools call -c | \
   bcftools filter -s LowQual -e '%QUAL<20 || DP<10' | \
   bcftools view -R "$scaffolds" | \
