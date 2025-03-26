@@ -23,7 +23,7 @@ module load bcftools/1.21
 bam_dir="./../cx_amplicon_bwa"
 out_dir="./../cx_amplicon_consensus"
 ref="../cx_amplicon_bwa/ref/Rep_Genera_Mito.fasta"
-scaffolds="COi_scaffolds.list"
+scaffolds="COi_reflist.txt"
 gene="COi"
 
 # Make output directory if it doesn't exist
