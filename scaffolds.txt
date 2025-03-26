@@ -1,0 +1,25 @@
+>KY929304.1 Culex quinquefasciatus isolate Trombay binary toxin receptor protein (Cqm1) gene, complete cds
+>ON563187.1 Culex quinquefasciatus isolate II-Ace2 acetylcholinesterase (Ace2) gene, partial cds
+>NC_003408.1 Coturnix japonica mitochondrion, complete genome
+>NC_006853.1 Bos taurus mitochondrion, complete genome
+>NC_008092.1 Canis lupus mitochondrion, complete genome
+>NC_011818.1 Accipiter gentilis mitochondrion, complete genome
+>NC_012920.1 Homo sapiens mitochondrion, complete genome
+>NC_013978.1 Columba livia mitochondrion, complete genome
+>NC_014574.1 Culex quinquefasciatus mitochondrion, complete genome
+>NC_015079.1 Culex pipiens pipiens mitochondrion, complete genome
+>NC_020648.1 Mephitis mephitis voucher YP2994 mitochondrion, complete genome
+>NC_020679.1 Antilocapra americana isolate UAM mitochondrion, complete genome
+>NC_024867.1 Poecile atricapilla voucher MMNH 47022 mitochondrion, complete genome
+>NC_024872.1 Turdus migratorius voucher MMNH 46438 mitochondrion, complete genome
+>NC_025610.1 Haemorhous mexicanus mitochondrion, complete genome
+>NC_025611.1 Passer domesticus mitochondrion, complete genome
+>NC_025616.1 Eremopsaltria mongolica mitochondrion, complete genome
+>NC_029360.1 Sturnus vulgaris isolate sv009 mitochondrion, complete genome
+>NC_031863.1 Zenaida macroura mitochondrion, complete genome
+>NC_037513.1 Streptopelia decaocto mitochondrion, complete genome
+>NC_041664.1 Piranga ludoviciana isolate sdsu2385 mitochondrion, complete genome
+>NC_053523.1 Gallus gallus isolate bGalGal1 mitochondrion, complete sequence, whole genome shotgun sequence
+>MW574355.1 Callipepla californica voucher FLMNH 44642 mitochondrion, complete genome
+>NC_072703.1 Pica hudsonia isolate Phud-1 mitochondrion, complete genome
+>NC_010089.1 Phoenicopterus roseus mitochondrion, complete genome
