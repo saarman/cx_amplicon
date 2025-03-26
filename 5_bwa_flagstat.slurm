@@ -21,8 +21,6 @@ module load samtools/1.16
 # Replace these variables with the actual paths and filenames
 bam_dir="./../cx_amplicon_bwa"
 
-#!/bin/bash
-
 # Output spreadsheet file
 output_spreadsheet="flagstat_results.tsv"
 
