@@ -17,7 +17,7 @@
 # Load modules
 module load bwa/2020_03_19
 module load samtools/1.16
-module load bcftools
+module load bcftools/1.16
 
 # Paths and filenames
 bam_dir="./../cx_amplicon_bwa"
