@@ -139,3 +139,9 @@ culex_cqm1_ace2_REF.fasta
  /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_TS/cx_amplicon_fastqc  
  /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_TS/cx_amplicon_scripts  
  /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_TS/cx_amplicon_vcf  
+## Norah's
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_NS  
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_NS/cx_amplicon_bwa  
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_NS/cx_amplicon_fastqc  
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_NS/cx_amplicon_scripts  
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_NS/cx_amplicon_vcf  
