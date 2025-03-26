@@ -17,7 +17,7 @@
 # Load modules
 module load bwa/2020_03_19
 module load samtools/1.16
-module load bcftools/1.21
+module load bcftools/1.16
 
 # Paths and filenames
 bam_dir="./../cx_amplicon_bwa"
@@ -42,7 +42,7 @@ for bam in *.bam; do
 
   echo "Processing $sample..."
 
-  bcftools mpileup -f "$ref" "$bam" | \
+  bcftools mpileup -d 1000 -f "$ref" "$bam" | \
   bcftools call -c | \
   bcftools filter -s LowQual -e '%QUAL<20 || DP<10' | \
   bcftools view -R "$scaffolds" | \
