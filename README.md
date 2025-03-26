@@ -144,4 +144,15 @@ culex_cqm1_ace2_REF.fasta
  /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_NS/cx_amplicon_bwa  
  /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_NS/cx_amplicon_fastqc  
  /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_NS/cx_amplicon_scripts  
- /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_NS/cx_amplicon_vcf  
+ /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_NS/cx_amplicon_vcf 
+
+ ### Example starting from beginning for Norah:
+  cd /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_NS                         # run only once!  
+  git clone https://github.com/saarman/cx_amplicon cx_amplicon_scripts                     # run only once!  
+  cd /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_NS/cx_amplicon_scripts     # run every time
+  git pull                                                                                 # run every time
+  sbatch 1_fastqc.slurm                                                                    # run example for step 1
+  git pull                                                                                 # run every time
+  sbatch 2_multiqc_summary.slurm                                                           # run example for step 2
+  
+  
