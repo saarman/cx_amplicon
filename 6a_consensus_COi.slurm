@@ -23,7 +23,7 @@ module load bcftools/1.21
 bam_dir="./../cx_amplicon_bwa"
 out_dir="./../cx_amplicon_consensus"
 ref="../cx_amplicon_bwa/ref/Rep_Genera_Mito.fasta"
-scaffolds="COi_reflist.txt"
+scaffolds="ref_list_COi.txt"
 gene="COi"
 
 # Make output directory if it doesn't exist
@@ -47,7 +47,7 @@ for bam in *.bam; do
   bcftools filter -s LowQual -e '%QUAL<20 || DP<10' | \
   bcftools view -R "$scaffolds" | \
   bcftools consensus -f "$ref" | \
-  awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "$out_dir/${sample}_${gene}_consensus.fa"
+  awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${out_dir}/${sample}_${gene}_consensus.fa"
 done
 
 # Concatenate all sample consensus FASTAs into one file
