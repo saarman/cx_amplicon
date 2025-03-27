@@ -52,10 +52,6 @@ for bam in *.bam; do
   # -d 1000 sets a high depth cap suitable for amplicon sequencing
   bcftools mpileup -d 2000 -f "$ref" "$bam" | \
   bcftools call -c -Ov -o "${vcf_dir}/${sample}.vcf"
-
-  # Compress and index the VCF file for bcftools compatibility
-  bgzip -f "${vcf_dir}/${sample}.vcf"
-  tabix -p vcf "${vcf_dir}/${sample}.vcf.gz"
 done
 
 # Reapply group write permissions to the full directory (ensures output is accessible)
