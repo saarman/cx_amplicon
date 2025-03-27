@@ -14,9 +14,6 @@
 # #SBATCH --mail-type=END
 # #SBATCH --mail-type=FAIL
 
-# Exit script on error (-e), undefined variable (-u), or any error in a pipeline (pipefail)
-set -euo pipefail
-
 # Load required software modules
 module load bwa/2020_03_19
 module load samtools/1.16
