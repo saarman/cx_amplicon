@@ -31,9 +31,6 @@ gene="ace2"                                        # Target gene name for file l
 mkdir -p "$out_dir"
 mkdir -p "$vcf_dir"
 
-# Make sure the ref file is indexed for samtools
-samtools faidx $ref
-
 # Ensure group write permissions for all relevant directories
 chmod -R g+w ../*
 
@@ -47,26 +44,12 @@ cd "$bam_dir"
 for bam in *.bam; do
   sample=$(basename "$bam" .bam)  # Extract sample name by removing .bam extension
 
-  # Index BAM file if no index exists
-  if [ ! -f "${bam}.bai" ] && [ ! -f "${sample}.bai" ]; then
-    samtools index "$bam"
-  fi
-
   echo "Processing $sample..."
-
-  # Generate VCF from BAM using bcftools mpileup + call
-  # -d 1000 sets a high depth cap suitable for amplicon sequencing
-  bcftools mpileup -d 1000 -f "$ref" "$bam" | \
-  bcftools call -c -Ov -o "${vcf_dir}/${sample}_${gene}.vcf"
-
-  # Compress and index the VCF file for bcftools compatibility
-  bgzip -f "${vcf_dir}/${sample}_${gene}.vcf"
-  tabix -p vcf "${vcf_dir}/${sample}_${gene}.vcf.gz"
 
   # Generate consensus sequence for the specific region
   # --missing N masks low-coverage positions (./. in VCF) with Ns
   samtools faidx "$ref" "$region" | \
-  bcftools consensus --missing N "${vcf_dir}/${sample}_${gene}.vcf.gz" | \
+  bcftools consensus --missing N "${vcf_dir}/${sample}.vcf" | \
   awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${out_dir}/${sample}_${gene}_consensus.fa"
 done
 
