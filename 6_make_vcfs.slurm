@@ -55,7 +55,7 @@ for bam in *.bam; do
   # Filter out low-quality (QUAL < 20) and low-depth (DP < 10) sites
   bcftools mpileup -a FORMAT/DP -d 2000 -f "$ref" "$bam" | \
   bcftools call -c | \
-  bcftools filter -s LowQual -e '%QUAL<20 || FMT/DP<10' -Ov -o "${vcf_dir}/${sample}.vcf"
+  bcftools filter -s LowQual -e '%QUAL<20 || FORMAT/DP<10' -Ov -o "${vcf_dir}/${sample}.vcf"
 
   # Compress and index the VCF for downstream use
   bgzip -f "${vcf_dir}/${sample}.vcf"
