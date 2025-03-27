@@ -55,8 +55,8 @@ for bam in *.bam; do
   bcftools view -i 'DP>=10' "${vcf_dir}/${sample}_temp.vcf" -Ov -o "${vcf_dir}/${sample}.vcf"
 
   # Compressing and indexing ${sample}.vcf...
-  bgzip -f "${sample}.vcf"
-  tabix -p vcf "${sample}.vcf.gz"
+  bgzip -f "${vcf_dir}/${sample}.vcf"
+  tabix -p vcf "${vcf_dir}/${sample}.vcf"
 done
 
 # Reapply group write permissions to the full directory (ensures output is accessible)
