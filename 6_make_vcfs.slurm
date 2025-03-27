@@ -18,6 +18,7 @@
 module load bwa/2020_03_19
 module load samtools/1.16
 module load bcftools/1.16
+module load htslib
 
 # Define input/output paths and filenames
 bam_dir="./../cx_amplicon_bwa"                     # Directory containing input BAM files
@@ -49,6 +50,10 @@ for bam in *.bam; do
   # -d 1000 sets a high depth cap suitable for amplicon sequencing
   bcftools mpileup -d 2000 -f "$ref" "$bam" | \
   bcftools call -c -Ov -o "${vcf_dir}/${sample}.vcf"
+
+  # Compressing and indexing ${sample}.vcf...
+  bgzip -f "${sample}.vcf"
+  tabix -p vcf "${sample}.vcf.gz"
 done
 
 # Reapply group write permissions to the full directory (ensures output is accessible)
