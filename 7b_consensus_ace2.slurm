@@ -21,11 +21,11 @@ module load bcftools/1.16
 module load htslib
 
 # Define input/output paths and filenames
-vcf_dir="../cx_amplicon_vcf"                       # Directory to store per-sample VCF files
-out_dir="../cx_amplicon_consensus"                 # Directory to store consensus FASTA files
-ref="../cx_amplicon_bwa/ref/Rep_Genera_Mito.fasta" # Reference FASTA file
-region_file="ref_list_ace2.txt"                    # Text file with one region: e.g., ON563187.1:1-712
-gene="ace2"                                        # Target gene name for file labeling
+vcf_dir="../cx_amplicon_vcf"                            # Directory to store per-sample VCF files
+out_dir="../cx_amplicon_consensus"                      # Directory to store consensus FASTA files
+ref="../cx_amplicon_bwa/ref/Rep_Genera_Mito.fasta"      # Reference FASTA file
+region_file="../cx_amplicon_scripts/ref_list_ace2.txt"  # Text file with one region: e.g., ON563187.1:1-712
+gene="ace2"                                             # Target gene name for file labeling
 
 # Create output directories if they don't exist
 mkdir -p "$out_dir"
@@ -41,18 +41,10 @@ region=$(cat "$region_file")
 cd "$vcf_dir"
 
 # Process each VCF file individually
-for vcf in *.vcf; do
-  sample=$(basename "$vcf" .vcf)  # Extract sample name by removing .bam extension
+for vcf in *.vcf.gz; do
+  sample=$(basename "$vcf" .vcf.gz)  # Extract sample name by removing .vcf extension
 
   echo "Processing $sample..."
-  # Generate consensus sequence for the specific region
-
-  # Compress and index VCF if needed
-  if [ ! -f "${sample}.vcf.gz" ]; then
-    echo "Compressing and indexing ${sample}.vcf..."
-    bgzip -f "${sample}.vcf"
-    tabix -p vcf "${sample}.vcf.gz"
-  fi
 
   # Generate consensus sequence for the specific region
   # --missing N masks low-coverage positions (./. in VCF) with Ns
