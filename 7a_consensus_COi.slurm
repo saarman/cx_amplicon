@@ -24,7 +24,7 @@ module load htslib
 vcf_dir="../cx_amplicon_vcf"                       # Directory to store per-sample VCF files
 out_dir="../cx_amplicon_consensus"                 # Directory to store consensus FASTA files
 ref="../cx_amplicon_bwa/ref/Rep_Genera_Mito.fasta" # Reference FASTA file with all COI sequences
-region_file="ref_list_coi.txt"                     # Text file with one reference sequence name per line
+region_file="ref_list_COi.txt"                     # Text file with one reference sequence name per line
 gene="coi"                                          # Target gene name for file labeling
 
 # Create output directories if they don't exist
