@@ -31,8 +31,11 @@ gene="ace2"                                       # Target gene name for file la
 mkdir -p "$out_dir"
 mkdir -p "$vcf_dir"
 
-# Ensure group write permissions for relevant directories
-chmod -R g+w "$out_dir" "$vcf_dir"
+# Ensure group write permissions for all relevant directories
+chmod -R g+w ../*
+
+# Make sure the ref file is indexed for samtools and bcftools
+samtools faidx "$ref"
 
 # Read the region of interest from the region file
 region=$(cat "$region_file")
@@ -70,5 +73,5 @@ done
 # Combine all per-sample consensus FASTAs into one multi-FASTA file
 cat "$out_dir"/*_"$gene"_consensus.fa > "$out_dir/all_${gene}_consensus.fa"
 
-# Ensure group write permission on final output
-chmod -R g+w "$out_dir" "$vcf_dir"
+# Ensure group write permissions for all relevant directories
+chmod -R g+w ../*
