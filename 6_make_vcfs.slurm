@@ -5,7 +5,7 @@
 #SBATCH --time=24:00:00                           # Maximum runtime (24 hours)
 #SBATCH --mem=24576                               # Memory in MB
 #SBATCH --nodes=1                                 # Number of nodes
-#SBATCH --ntasks-per-node=16                      # Number of CPU cores per node
+#SBATCH --ntasks-per-node=4                       # Number of CPU cores per node
 #SBATCH --job-name="consensus"                    # Job name for SLURM queue
 
 # Optional email notifications (uncomment if needed)
