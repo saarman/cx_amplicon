@@ -34,7 +34,7 @@ mkdir -p "$vcf_dir"
 # Ensure group write permissions for all relevant directories
 chmod -R g+w ../*
 
-# Make sure the ref file is indexed for samtools and bcftools
+# Make sure the ref file is indexed for samtools
 samtools faidx "$ref"
 
 # Read the region of interest from the region file
