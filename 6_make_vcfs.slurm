@@ -51,7 +51,7 @@ for bam in *.bam; do
   # Generate VCF from BAM using bcftools mpileup + call, no filtering
   # -d 1000 sets a high depth cap suitable for amplicon sequencing
   bcftools mpileup -d 2000 -f "$ref" "$bam" | \
-  bcftools call -c -Ov -o "${vcf_dir}/${sample}_${gene}.vcf"
+  bcftools call -c -Ov -o "${vcf_dir}/${sample}.vcf"
 
   # Compress and index the VCF file for bcftools compatibility
   bgzip -f "${vcf_dir}/${sample}_${gene}.vcf"
