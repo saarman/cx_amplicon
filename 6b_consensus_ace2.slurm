@@ -20,22 +20,22 @@ module load samtools/1.16
 module load bcftools/1.16
 
 # Define input/output paths and filenames
-bam_dir="./../cx_amplicon_bwa"                    # Directory containing input BAM files
-vcf_dir="./../cx_amplicon_vcf"                    # Directory to store per-sample VCF files
-out_dir="./../cx_amplicon_consensus"              # Directory to store consensus FASTA files
+bam_dir="./../cx_amplicon_bwa"                     # Directory containing input BAM files
+vcf_dir="./../cx_amplicon_vcf"                     # Directory to store per-sample VCF files
+out_dir="./../cx_amplicon_consensus"               # Directory to store consensus FASTA files
 ref="../cx_amplicon_bwa/ref/Rep_Genera_Mito.fasta" # Reference FASTA file
-region_file="ref_list_ace2.txt"                   # Text file with one region: e.g., ON563187.1:1-712
-gene="ace2"                                       # Target gene name for file labeling
+region_file="ref_list_ace2.txt"                    # Text file with one region: e.g., ON563187.1:1-712
+gene="ace2"                                        # Target gene name for file labeling
 
 # Create output directories if they don't exist
 mkdir -p "$out_dir"
 mkdir -p "$vcf_dir"
 
+# Make sure the ref file is indexed for samtools
+samtools faidx $ref
+
 # Ensure group write permissions for all relevant directories
 chmod -R g+w ../*
-
-# Make sure the ref file is indexed for samtools
-samtools faidx "$ref"
 
 # Read the region of interest from the region file
 region=$(cat "$region_file")
