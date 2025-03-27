@@ -54,8 +54,8 @@ for bam in *.bam; do
   bcftools call -c -Ov -o "${vcf_dir}/${sample}.vcf"
 
   # Compress and index the VCF file for bcftools compatibility
-  bgzip -f "${vcf_dir}/${sample}_${gene}.vcf"
-  tabix -p vcf "${vcf_dir}/${sample}_${gene}.vcf.gz"
+  bgzip -f "${vcf_dir}/${sample}.vcf"
+  tabix -p vcf "${vcf_dir}/${sample}.vcf.gz"
 done
 
 # Reapply group write permissions to the full directory (ensures output is accessible)
