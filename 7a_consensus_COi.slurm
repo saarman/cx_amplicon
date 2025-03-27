@@ -5,8 +5,8 @@
 #SBATCH --time=24:00:00                           # Maximum runtime (24 hours)
 #SBATCH --mem=24576                               # Memory in MB
 #SBATCH --nodes=1                                 # Number of nodes
-#SBATCH --ntasks-per-node=16                      # Number of CPU cores per node
-#SBATCH --job-name="consensus"                    # Job name for SLURM queue
+#SBATCH --ntasks-per-node=4                       # Number of CPU cores per node
+#SBATCH --job-name="coi"                          # Job name for SLURM queue
 
 # Optional email notifications (uncomment if needed)
 # #SBATCH --mail-user=emily.calhoun@usu.edu
@@ -18,7 +18,6 @@
 module load bwa/2020_03_19
 module load samtools/1.16
 module load bcftools/1.16
-module load htslib
 
 # Define input/output paths and filenames
 vcf_dir="../cx_amplicon_vcf"                          # Directory to store per-sample VCF files
