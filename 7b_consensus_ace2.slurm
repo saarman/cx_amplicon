@@ -20,7 +20,6 @@ module load samtools/1.16
 module load bcftools/1.16
 
 # Define input/output paths and filenames
-bam_dir="./../cx_amplicon_bwa"                     # Directory containing input BAM files
 vcf_dir="./../cx_amplicon_vcf"                     # Directory to store per-sample VCF files
 out_dir="./../cx_amplicon_consensus"               # Directory to store consensus FASTA files
 ref="../cx_amplicon_bwa/ref/Rep_Genera_Mito.fasta" # Reference FASTA file
@@ -37,19 +36,27 @@ chmod -R g+w ../*
 # Read the region of interest from the region file
 region=$(cat "$region_file")
 
-# Move into the BAM directory to simplify file handling
-cd "$bam_dir"
+# Move into the VCF directory to simplify file handling
+cd "$vcf_dir"
 
-# Process each BAM file individually
-for bam in *.bam; do
-  sample=$(basename "$bam" .bam)  # Extract sample name by removing .bam extension
+# Process each VCF file individually
+for vcf in *.vcf; do
+  sample=$(basename "$vcf" .vcf)  # Extract sample name by removing .bam extension
 
   echo "Processing $sample..."
+  # Generate consensus sequence for the specific region
+
+  # Compress and index VCF if needed
+  if [ ! -f "${sample}.vcf.gz" ]; then
+    echo "Compressing and indexing ${sample}.vcf..."
+    bgzip -f "${sample}.vcf"
+    tabix -p vcf "${sample}.vcf.gz"
+  fi
 
   # Generate consensus sequence for the specific region
   # --missing N masks low-coverage positions (./. in VCF) with Ns
   samtools faidx "$ref" "$region" | \
-  bcftools consensus --missing N "${vcf_dir}/${sample}.vcf" | \
+  bcftools consensus --missing N "${vcf_dir}/${sample}.vcf.gz" | \
   awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${out_dir}/${sample}_${gene}_consensus.fa"
 done
 
