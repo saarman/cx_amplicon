@@ -52,7 +52,7 @@ for vcf in *.vcf.gz; do
 done
 
 # Combine all per-sample consensus FASTAs into one multi-FASTA file
-cat "${out_dir}/${gene}"/*consensus.fa > "$out_dir/all_${gene}_consensus.fa"
+cat ${out_dir}/${gene}/*.fa > ${out_dir}/all_${gene}_consensus.fa
 
 # Ensure group write permissions for all relevant directories
 chmod -R g+w ../*
