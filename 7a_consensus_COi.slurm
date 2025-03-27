@@ -52,13 +52,13 @@ for vcf in *.vcf.gz; do
     samtools faidx "$ref" "$region" | \
     bcftools consensus --missing N "${sample}.vcf.gz" | \
     awk -v sample="$sample" -v region="$region" '/^>/{print ">"sample"|"region} !/^>/' > \
-    "${out_dir}/${sample}_${gene}_${clean_region}_consensus.fa"
+    "${out_dir}/${gene}/${sample}_${gene}_${clean_region}_consensus.fa"
 
   done < "$region_file"
 done
 
 # Combine all per-sample consensus FASTAs into one multi-FASTA file
-cat "$out_dir"/*${gene}*consensus.fa > "$out_dir/all_${gene}_consensus.fa"
+cat "${out_dir}/${gene}"/*consensus.fa > "$out_dir/all_${gene}_consensus.fa"
 
 # Ensure group write permissions for all relevant directories
 chmod -R g+w ../*
