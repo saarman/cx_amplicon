@@ -43,5 +43,34 @@ for bam in *.bam; do
   bcftools view -R scaffolds.txt | \
   bcftools consensus -f reference.fasta | \
   awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${sample}_consensus.fa"
-```
 done
+```
+
+Still some tweaks...testing that input and output exists...
+```
+
+bash
+
+# Load required software modules
+module load bwa/2020_03_19
+module load samtools/1.16
+module load bcftools/1.16
+
+# Define input/output paths and filenames
+bam_dir="./../cx_amplicon_bwa"                    # Directory containing input BAM files
+vcf_dir="./../cx_amplicon_vcf"                    # Directory to store per-sample VCF files
+out_dir="./../cx_amplicon_consensus"              # Directory to store consensus FASTA files
+ref="../cx_amplicon_bwa/ref/Rep_Genera_Mito.fasta" # Reference FASTA file
+region_file="ref_list_ace2.txt"                   # Text file with one region: e.g., ON563187.1:1-712
+gene="ace2"                                       # Target gene name for file labeling
+
+# Create output directories if they don't exist
+mkdir -p "$out_dir"
+mkdir -p "$vcf_dir"
+
+# Ensure group write permissions for relevant directories
+chmod -R g+w "$out_dir" "$vcf_dir"
+
+samtools faidx "$ref" ON563187.1:1-712
+
+```
