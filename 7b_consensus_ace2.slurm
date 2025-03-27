@@ -27,7 +27,7 @@ gene="ace2"                                             # Target gene name for f
 
 # Create output directories if they don't exist
 mkdir -p "$out_dir"
-mkdir -p "$vcf_dir"
+mkdir -p "${out_dir}/${gene}"
 
 # Ensure group write permissions for all relevant directories
 chmod -R g+w ../*
@@ -48,11 +48,11 @@ for vcf in *.vcf.gz; do
   # --missing N masks low-coverage positions (./. in VCF) with Ns
   samtools faidx "$ref" "$region" | \
   bcftools consensus --missing N "${vcf_dir}/${sample}.vcf.gz" | \
-  awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${out_dir}/${sample}_${gene}_consensus.fa"
+  awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${out_dir}/${gene}/${sample}_${gene}_consensus.fa"
 done
 
 # Combine all per-sample consensus FASTAs into one multi-FASTA file
-cat "$out_dir"/*_"$gene"_consensus.fa > "$out_dir/all_${gene}_consensus.fa"
+cat "${out_dir}/${gene}"/*_"$gene"_consensus.fa > "$out_dir/all_${gene}_consensus.fa"
 
 # Ensure group write permissions for all relevant directories
 chmod -R g+w ../*
