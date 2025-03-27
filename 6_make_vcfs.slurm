@@ -48,18 +48,14 @@ for bam in *.bam; do
     samtools index "$bam"
   fi
 
-  echo "Generating VCF for $sample..."
-
-  # Generate per-sample VCF with quality filtering
-  # -d 2000 allows high coverage (good for amplicon sequencing)
-  # Filter out low-quality (QUAL < 20) 
+  # Generate VCF from BAM using bcftools mpileup + call, no filtering
+  # -d 1000 sets a high depth cap suitable for amplicon sequencing
   bcftools mpileup -d 2000 -f "$ref" "$bam" | \
-  bcftools call -c | \
-  bcftools filter -s LowQual -e %QUAL<20 -Ov -o "${vcf_dir}/${sample}.vcf"
+  bcftools call -c -Ov -o "${vcf_dir}/${sample}_${gene}.vcf"
 
-  # Compress and index the VCF for downstream use
-  bgzip -f "${vcf_dir}/${sample}.vcf"
-  tabix -p vcf "${vcf_dir}/${sample}.vcf.gz"
+  # Compress and index the VCF file for bcftools compatibility
+  bgzip -f "${vcf_dir}/${sample}_${gene}.vcf"
+  tabix -p vcf "${vcf_dir}/${sample}_${gene}.vcf.gz"
 done
 
 # Reapply group write permissions to the full directory (ensures output is accessible)
