@@ -53,7 +53,7 @@ for bam in *.bam; do
   # Generate per-sample VCF with quality filtering
   # -d 2000 allows high coverage (good for amplicon sequencing)
   # Filter out low-quality (QUAL < 20) and low-depth (DP < 10) sites
-  bcftools mpileup -d 2000 -f "$ref" "$bam" | \
+  bcftools mpileup -a FORMAT/DP -d 2000 -f "$ref" "$bam" | \
   bcftools call -c | \
   bcftools filter -s LowQual -e '%QUAL<20 || FMT/DP<10' -Ov -o "${vcf_dir}/${sample}.vcf"
 
