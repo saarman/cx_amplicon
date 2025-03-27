@@ -27,7 +27,7 @@ gene="coi"                                            # Target gene name for fil
 
 # Create output directories if they don't exist
 mkdir -p "$out_dir"
-mkdir -p "$vcf_dir"
+mkdir -p "${out_dir}/${gene}"
 
 # Ensure group write permissions for all relevant directories
 chmod -R g+w ../*
