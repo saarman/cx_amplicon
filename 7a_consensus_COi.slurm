@@ -15,7 +15,6 @@
 # #SBATCH --mail-type=FAIL
 
 # Load required software modules
-module load bwa/2020_03_19
 module load samtools/1.16
 module load bcftools/1.16
 
