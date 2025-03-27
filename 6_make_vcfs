@@ -1,0 +1,64 @@
+#!/bin/bash
+
+#SBATCH --partition=saarman-shared-np             # Partition to run the job
+#SBATCH --account=saarman-np                      # Account to charge job resources
+#SBATCH --time=24:00:00                           # Maximum runtime (24 hours)
+#SBATCH --mem=24576                               # Memory in MB
+#SBATCH --nodes=1                                 # Number of nodes
+#SBATCH --ntasks-per-node=16                      # Number of CPU cores per node
+#SBATCH --job-name="consensus"                    # Job name for SLURM queue
+
+# Optional email notifications (uncomment if needed)
+# #SBATCH --mail-user=emily.calhoun@usu.edu
+# #SBATCH --mail-type=BEGIN
+# #SBATCH --mail-type=END
+# #SBATCH --mail-type=FAIL
+
+
+# Exit immediately on error (-e), undefined variable (-u), or failed command in pipeline (pipefail)
+set -euo pipefail
+# Load required software modules
+module load bwa/2020_03_19
+module load samtools/1.16
+module load bcftools/1.16
+
+# Define input/output paths and filenames
+bam_dir="./../cx_amplicon_bwa"                     # Directory containing input BAM files
+vcf_dir="./../cx_amplicon_vcf"                     # Directory to store per-sample VCF files
+ref="../cx_amplicon_bwa/ref/Rep_Genera_Mito.fasta" # Reference FASTA file
+
+# Ensure output directory exists
+mkdir -p "$vcf_dir"
+
+# Index the reference if needed
+samtools faidx "$ref"
+
+# Apply permissions to all directories above
+chmod -R g+w ../*
+
+# Go to BAM directory to simplify file paths
+cd "$bam_dir"
+
+# Loop over all BAM files
+for bam in *.bam; do
+  sample=$(basename "$bam" .bam)
+
+  # Index BAM if not already present
+  if [ ! -f "${bam}.bai" ] && [ ! -f "${sample}.bai" ]; then
+    samtools index "$bam"
+  fi
+
+  echo "Generating VCF for $sample..."
+
+  # Variant calling with basic quality filtering
+  bcftools mpileup -d 2000 -f "$ref" "$bam" | \
+  bcftools call -c | \
+  bcftools filter -s LowQual -e '%QUAL<20 || DP<10' -Ov -o "${vcf_dir}/${sample}.vcf"
+
+  # Compress and index VCF
+  bgzip -f "${vcf_dir}/${sample}.vcf"
+  tabix -p vcf "${vcf_dir}/${sample}.vcf.gz"
+done
+
+# Apply permissions to all directories above
+chmod -R g+w ../*
