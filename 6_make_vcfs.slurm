@@ -56,7 +56,7 @@ for bam in *.bam; do
 
   # Compressing and indexing ${sample}.vcf...
   bgzip -f "${vcf_dir}/${sample}.vcf"
-  tabix -p vcf "${vcf_dir}/${sample}.vcf"
+  tabix -p vcf "${vcf_dir}/${sample}.vcf.gz"
 done
 
 # Reapply group write permissions to the full directory (ensures output is accessible)
