@@ -1,55 +1,60 @@
 #!/bin/bash
 
-# job standard output will go to the file slurm-%j.out (where %j is the job ID)
+#SBATCH --partition=saarman-shared-np             # Partition to run the job
+#SBATCH --account=saarman-np                      # Account to charge job resources
+#SBATCH --time=24:00:00                           # Maximum runtime (24 hours)
+#SBATCH --mem=24576                               # Memory in MB
+#SBATCH --nodes=1                                 # Number of nodes
+#SBATCH --ntasks-per-node=16                      # Number of CPU cores per node
+#SBATCH --job-name="consensus"                    # Job name for SLURM queue
 
-#SBATCH --partition=saarman-shared-np   
-#SBATCH --account=saarman-np
-#SBATCH --time=24:00:00   # walltime limit (HH:MM:SS)
-#SBATCH --mem=24576 # memory given in MB
-#SBATCH --nodes=1   # number of nodes
-#SBATCH --ntasks-per-node=16   # 20 processor core(s) per node X 2 threads per core
-#SBATCH --job-name="consensus"
-# #SBATCH --mail-user=emily.calhoun@usu.edu   # email address
+# Optional email notifications (uncomment if needed)
+# #SBATCH --mail-user=emily.calhoun@usu.edu
 # #SBATCH --mail-type=BEGIN
 # #SBATCH --mail-type=END
 # #SBATCH --mail-type=FAIL
 
-# Load modules
+# Load required software modules
 module load bwa/2020_03_19
 module load samtools/1.16
 module load bcftools/1.16
+module load htslib
 
-# Paths and filenames
-bam_dir="./../cx_amplicon_bwa"
-out_dir="./../cx_amplicon_consensus"
-ref="../cx_amplicon_bwa/ref/Rep_Genera_Mito.fasta"
-scaffolds="ref_list_cqm1.txt"
-gene="cqm1"
+# Define input/output paths and filenames
+vcf_dir="../cx_amplicon_vcf"                            # Directory to store per-sample VCF files
+out_dir="../cx_amplicon_consensus"                      # Directory to store consensus FASTA files
+ref="../cx_amplicon_bwa/ref/Rep_Genera_Mito.fasta"      # Reference FASTA file
+region_file="../cx_amplicon_scripts/ref_list_cqm1.txt"  # Text file with one region: e.g., ON563187.1:1-712
+gene="cqm1"                                             # Target gene name for file labeling
 
-# Make output directory if it doesn't exist
+# Create output directories if they don't exist
 mkdir -p "$out_dir"
-chmod -R g+w ../*  # Permissions
+mkdir -p "$vcf_dir"
 
-# Loop through each .bam file in the bam_dir
-cd "$bam_dir"
-for bam in *.bam; do
-  sample=$(basename "$bam" .bam)
+# Ensure group write permissions for all relevant directories
+chmod -R g+w ../*
 
-  # Ensure BAM is indexed
-  if [ ! -f "${bam}.bai" ] && [ ! -f "${sample}.bai" ]; then
-    samtools index "$bam"
-  fi
+# Read the region of interest from the region file
+region=$(cat "$region_file")
+
+# Move into the VCF directory to simplify file handling
+cd "$vcf_dir"
+
+# Process each VCF file individually
+for vcf in *.vcf.gz; do
+  sample=$(basename "$vcf" .vcf.gz)  # Extract sample name by removing .vcf extension
 
   echo "Processing $sample..."
 
-  bcftools mpileup -d 1000 -f "$ref" "$bam" | \
-  bcftools call -c | \
-  bcftools filter -s LowQual -e '%QUAL<20 || DP<10' | \
-  bcftools view -R "$scaffolds" | \
-  bcftools consensus -f "$ref" | \
+  # Generate consensus sequence for the specific region
+  # --missing N masks low-coverage positions (./. in VCF) with Ns
+  samtools faidx "$ref" "$region" | \
+  bcftools consensus --missing N "${vcf_dir}/${sample}.vcf.gz" | \
   awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${out_dir}/${sample}_${gene}_consensus.fa"
 done
 
-# Concatenate all sample consensus FASTAs into one file
+# Combine all per-sample consensus FASTAs into one multi-FASTA file
 cat "$out_dir"/*_"$gene"_consensus.fa > "$out_dir/all_${gene}_consensus.fa"
-chmod -R g+w ../*  # Permissions
+
+# Ensure group write permissions for all relevant directories
+chmod -R g+w ../*
