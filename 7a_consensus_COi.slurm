@@ -38,17 +38,10 @@ chmod -R g+w ../*
 cd "$vcf_dir"
 
 # Process each VCF file individually
-for vcf in *.vcf; do
-  sample=$(basename "$vcf" .vcf)  # Extract sample name by removing .vcf extension
+for vcf in *.vcf.gz; do
+  sample=$(basename "$vcf" .vcf.gz)  # Extract sample name by removing .vcf extension
 
   echo "Processing $sample..."
-
-  # Compress and index VCF if needed
-  if [ ! -f "${sample}.vcf.gz" ]; then
-    echo "Compressing and indexing ${sample}.vcf..."
-    bgzip -f "${sample}.vcf"
-    tabix -p vcf "${sample}.vcf.gz"
-  fi
 
   # Loop over each reference region (e.g., COI sequence name or region like SeqID:1-700)
   while read -r region; do
