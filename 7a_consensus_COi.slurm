@@ -49,14 +49,11 @@ for vcf in *.vcf.gz; do
 
     # Generate consensus sequence for the specific region
     # --missing N masks low-coverage positions (./. in VCF) with Ns
-bcftools consensus --missing N -f <(echo ">${sample}" && yes N | head -n 1000) "${sample}.vcf.gz" | \
-awk -v sample="$sample" -v region="$region" '/^>/{print ">"sample"|"region} !/^>/' > \
-"${out_dir}/${gene}/${sample}_${gene}_${clean_region}_consensus.fa"
 
-    # samtools faidx "$ref" "$region" | \
-   # bcftools consensus --missing N "${sample}.vcf.gz" | \
-    #vawk -v sample="$sample" -v region="$region" '/^>/{print ">"sample"|"region} !/^>/' > \
-   # "${out_dir}/${gene}/${sample}_${gene}_${clean_region}_consensus.fa"
+    samtools faidx "$ref" "$region" | \
+   bcftools consensus --missing N "${sample}.vcf.gz" | \
+    awk -v sample="$sample" -v region="$region" '/^>/{print ">"sample"|"region} !/^>/' > \
+    "${out_dir}/${gene}/${sample}_${gene}_${clean_region}_consensus.fa"
 
   done < "$region_file"
 done
