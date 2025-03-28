@@ -52,7 +52,7 @@ for vcf in *.vcf.gz; do
 
     samtools faidx "$ref" "$region" | \
    bcftools consensus --missing N "${sample}.vcf.gz" | \
-    awk -v sample="$sample" -v region="$region" '/^>/{print ">"sample"|"region} !/^>/' > \
+    awk -v sample="$sample" -v region="$region" '/^>/{print ">"sample"|"region; next} {print}' > \
     "${out_dir}/${gene}/${sample}_${gene}_${clean_region}_consensus.fa"
 
   done < "$region_file"
