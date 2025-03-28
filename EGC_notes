@@ -76,3 +76,15 @@ Some reads have MAPQ scores in the 50s and 40s, which are still fairly good but 
 There are a small number of reads with MAPQ < 30, meaning they have lower confidence.
 
 The biggest issue: 116,580 reads have MAPQ = 0, which means they are either unaligned or multimapped (low confidence).
+
+
+
+
+
+
+3-28-25
+Emily tried adding to line 52 of 7a - only created consensus with a bunch of Ns 
+
+# bcftools consensus --missing N -f <(echo ">${sample}" && yes N | head -n 1000) "${sample}.vcf.gz" | \
+# awk -v sample="$sample" -v region="$region" '/^>/{print ">"sample"|"region} !/^>/' > \
+# "${out_dir}/${gene}/${sample}_${gene}_${clean_region}_consensus.fa"
