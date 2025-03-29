@@ -49,8 +49,11 @@ for bam in *.bam; do
   # Step 1: Generate VCF from BAM using bcftools mpileup filter for high mapping quality
   bcftools mpileup -d 2000 -f "$ref" -q 50 "$bam" | \           # High MQ filter of 50 (scale is to 60)
   bcftools call -c -Ov -o "${vcf_dir}/${sample}_temp.vcf"       # Output temporary VCF
+  chmod -R g+w ../*
+  
+  # Zip and index
   bgzip -c "${vcf_dir}/${sample}_temp.vcf" > "${vcf_dir}/${sample}_temp.vcf.gz" # Compress VCF
-  tabix -p vcf  "${vcf_dir}/${sample}_temp.vcf.gz"              # Index the compressed VCF
+  tabix -p vcf "${vcf_dir}/${sample}_temp.vcf.gz"              # Index the compressed VCF
 
   # Step 2: Filter for regions and depth (DP >= 10) and COI regions
   bcftools view -i 'DP>=10' \
