@@ -46,17 +46,19 @@ for bam in *.bam; do
     samtools index "$bam"
   fi
 
-  # Generate VCF from BAM using bcftools mpileup + call, no filtering
-  # -d 1000 sets a high depth cap suitable for amplicon sequencing
-  bcftools mpileup -d 2000 -f "$ref" -q 20 "$bam" | \
-  bcftools call -c -Ov -o "${vcf_dir}/${sample}_temp.vcf"
+  # Step 1: Generate VCF from BAM using bcftools mpileup filter for mapping quality
+  bcftools mpileup -d 2000 -f "$ref" -q 30 "$bam" | \           # MQ filter of 30 (scale is to 60)
+  bcftools call -c -Oz -o "${vcf_dir}/${sample}_temp.vcf.gz"    # Output temporary compressed VCF
+  tabix -p vcf  "${vcf_dir}/${sample}_temp.vcf.gz"              # Index the compressed VCF
 
-  # 2. Filter for depth (DP >= 10)  
-  bcftools view -i 'DP>=10' "${vcf_dir}/${sample}_temp.vcf" -Ov -o "${vcf_dir}/${sample}.vcf"
+  # Step 2: Filter for regions and depth (DP >= 10) and COI regions
+  bcftools view -i 'DP>=10' \
+  -r ON563187.1:1-712,KY929304.1:1-1848 "${vcf_dir}/${sample}_temp.vcf.gz" -Oz -o "${vcf_dir}/${sample}_ace2_cqm1.vcf.gz"
+  tabix -p vcf "${vcf_dir}/${sample}_ace2_cqm1.vcf.gz"                    # Index the final filtered VCF with tabix
 
-  # Compressing and indexing ${sample}.vcf...
-  bgzip -f "${vcf_dir}/${sample}.vcf"
-  tabix -p vcf "${vcf_dir}/${sample}.vcf.gz"
+  # Step 3: Cleanup temporary files
+  rm "${vcf_dir}/${sample}_temp.vcf.gz" "${vcf_dir}/${sample}_temp.vcf.gz.tbi"
+
 done
 
 # Reapply group write permissions to the full directory (ensures output is accessible)
