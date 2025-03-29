@@ -47,15 +47,19 @@ for bam in *.bam; do
   fi
 
   # Step 1: Generate VCF from BAM using bcftools mpileup filter for high mapping quality
-  bcftools mpileup -d 2000 -f "$ref" -q 50 --ploidy 1 "$bam" | \           # High MQ filter of 50 (scale is to 60)
-  bcftools call -c -Oz -o "${vcf_dir}/${sample}_temp.vcf.gz"               # Output temporary compressed VCF
-  tabix -p vcf  "${vcf_dir}/${sample}_temp.vcf.gz"                         # Index the compressed VCF
+  bcftools mpileup -d 2000 -f "$ref" -q 50 "$bam" | \           # High MQ filter of 50 (scale is to 60)
+  bcftools call -c -Ov -o "${vcf_dir}/${sample}_temp.vcf"       # Output temporary VCF
+  bgzip -c "${vcf_dir}/${sample}_temp.vcf" > "${vcf_dir}/${sample}_temp.vcf.gz" # Compress VCF
+  tabix -p vcf  "${vcf_dir}/${sample}_temp.vcf.gz"              # Index the compressed VCF
 
   # Step 2: Filter for regions and depth (DP >= 10) and COI regions
   bcftools view -i 'DP>=10' \
   -r NC_003408.1:1-16697,NC_006853.1:1-16338,NC_008092.1:1-16729,NC_011818.1:1-18266,NC_012920.1:1-16569,NC_013978.1:1-17229,NC_014574.1:1-15587,NC_015079.1:1-14856,NC_020648.1:1-16538,NC_020679.1:1-16352,NC_024867.1:1-16765,NC_024872.1:1-16669,NC_025610.1:1-16822,NC_025611.1:1-16802,NC_025616.1:1-16811,NC_029360.1:1-16793,NC_031863.1:1-17132,NC_037513.1:1-17160,NC_041664.1:1-16804,NC_053523.1:1-16784,MW574355.1:1-16707,NC_072703.1:1-16945,NC_010089.1:1-17446 \
-  "${vcf_dir}/${sample}_temp.vcf.gz" -Oz -o "${vcf_dir}/${sample}_coi.vcf.gz"
-  tabix -p vcf "${vcf_dir}/${sample}_coi.vcf.gz"                    # Index the final filtered VCF with tabix
+  "${vcf_dir}/${sample}_temp.vcf.gz" -Ov -o "${vcf_dir}/${sample}_coi.vcf"
+  
+  # Step 3: Compress and index
+  bgzip -c "${vcf_dir}/${sample}_coi.vcf" > "${vcf_dir}/${sample}_coi.vcf.gz" # Compress VCF
+  tabix -p vcf "${vcf_dir}/${sample}_coi.vcf.gz"             # Index the compressed VCF
 
   # Step 3: Cleanup temporary files
   rm "${vcf_dir}/${sample}_temp.vcf.gz" "${vcf_dir}/${sample}_temp.vcf.gz.tbi"
