@@ -47,7 +47,7 @@ for bam in *.bam; do
   fi
 
   # Step 1: Generate VCF from BAM using bcftools mpileup filter for high mapping quality
-  bcftools mpileup -d 2000 -f "$ref" -q 30 "$bam" | \           # High MQ filter of 50 (scale is to 60)
+  bcftools mpileup -d 2000 -f "$ref" -q 20 "$bam" | \           # High MQ filter of 50 (scale is to 60)
   bcftools call -c -Ov -o "${vcf_dir}/${sample}_temp.vcf"       # Output temporary VCF
   chmod -R g+w ../*
   
