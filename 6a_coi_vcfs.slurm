@@ -52,7 +52,7 @@ for bam in *.bam; do
   chmod -R g+w ../*
   
   # Zip and index
-  bgzip -c "${vcf_dir}/${sample}_temp.vcf" > "${vcf_dir}/${sample}_temp.vcf.gz" # Compress VCF
+  bgzip -f "${vcf_dir}/${sample}_temp.vcf" > "${vcf_dir}/${sample}_temp.vcf.gz" # Compress VCF
   tabix -p vcf "${vcf_dir}/${sample}_temp.vcf.gz"              # Index the compressed VCF
 
   # Step 2: Filter for regions and depth (DP >= 10) and COI regions
@@ -61,7 +61,7 @@ for bam in *.bam; do
   "${vcf_dir}/${sample}_temp.vcf.gz" -Ov -o "${vcf_dir}/${sample}_coi.vcf"
   
   # Step 3: Compress and index
-  bgzip -c "${vcf_dir}/${sample}_coi.vcf" > "${vcf_dir}/${sample}_coi.vcf.gz" # Compress VCF
+  bgzip -f "${vcf_dir}/${sample}_coi.vcf" > "${vcf_dir}/${sample}_coi.vcf.gz" # Compress VCF
   tabix -p vcf "${vcf_dir}/${sample}_coi.vcf.gz"             # Index the compressed VCF
 
   # Step 3: Cleanup temporary files
