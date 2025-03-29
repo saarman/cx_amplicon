@@ -14,6 +14,8 @@
 # #SBATCH --mail-type=END
 # #SBATCH --mail-type=FAIL
 
+# Summary: playing around with selecting regions while creating vcf file
+
 # Load required software modules
 module load bwa/2020_03_19
 module load samtools/1.16
