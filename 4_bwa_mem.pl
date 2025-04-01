@@ -8,7 +8,7 @@ my $max = 20;  # Set the maximum number of parallel processes
 my $pm = Parallel::ForkManager->new($max);  # Create a new Parallel::ForkManager object
 
 # Path to the reference file
-my $ref = "../cx_amplicon_bwa/ref/ace2_cqm1_coi2.fasta";
+my $ref = "../cx_amplicon_bwa/ref/ace2_cqm1_coi.fasta";
 
 # Path to the primers file
 my $primers = "../cx_amplicon_bwa/ref/primers.fasta";
