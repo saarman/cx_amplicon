@@ -21,7 +21,7 @@ module load bcftools/1.16
 # Define input/output paths and filenames
 vcf_dir="../cx_amplicon_vcf"                            # Directory to store per-sample VCF files
 out_dir="../cx_amplicon_consensus"                      # Directory to store consensus FASTA files
-ref="../cx_amplicon_bwa/ref/Rep_Genera_Mito.fasta"      # Reference FASTA file
+ref="../cx_amplicon_bwa/ref/ace2_cqm1_coi2.fasta"      # Reference FASTA file
 region_file="../cx_amplicon_scripts/ref_list_cqm1.txt"  # Text file with one region: e.g., ON563187.1:1-712
 gene="cqm1"                                             # Target gene name for file labeling
 
