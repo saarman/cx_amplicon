@@ -4,7 +4,7 @@
 #SBATCH --ntasks=20          # same as $max set in ForkManager
 #SBATCH --account=saarman-np
 #SBATCH --partition=saarman-shared-np   
-#SBATCH --job-name=bwa-mem2
+#SBATCH --job-name=bwa-mem
 # #SBATCH --mail-type=BEGIN
 # #SBATCH --mail-type=END
 # #SBATCH --mail-type=FAIL
