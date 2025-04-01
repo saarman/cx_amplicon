@@ -20,6 +20,8 @@ module load samtools/1.16
 module load bcftools/1.16
 module load htslib
 
+# Working directory /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_NS/cx_amplicon_scripts
+
 # Define input/output paths and filenames
 bam_dir="./../cx_amplicon_bwa"                     # Directory containing input BAM files
 vcf_dir="./../cx_amplicon_vcf"                     # Directory to store per-sample VCF files
