@@ -21,7 +21,7 @@ module load bwa/2020_03_19
 #module load bwa-mem/2.2.1
 
 # Replace these variables with the actual paths and filenames
-input_ref="Rep_Genera_Mito.fasta"
+input_ref="ace2_cqm1_coi2.fasta"
 output_folder="./../cx_amplicon_bwa/ref/"
 
 # Create the output folder if it doesn't exist, copy fasta file  into output
