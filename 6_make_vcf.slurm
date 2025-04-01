@@ -54,11 +54,11 @@ for bam in *.bam; do
   bcftools call -c -Ov -o "${vcf_dir}/${sample}_temp.vcf"
 
   # 2. Filter for depth (DP >= 50)
-  bcftools view -i 'DP>=10' "${vcf_dir}/${sample}_temp.vcf" -Ov -o "${vcf_dir}/${sample}_q30.vcf"
+  bcftools view -i 'DP>=50' "${vcf_dir}/${sample}_temp.vcf" -Ov -o "${vcf_dir}/${sample}.vcf"
 
   # Compressing and indexing ${sample}.vcf...
-  bgzip -f "${vcf_dir}/${sample}_q30.vcf"
-  tabix -p vcf "${vcf_dir}/${sample}_q30.vcf.gz"
+  bgzip -f "${vcf_dir}/${sample}.vcf"
+  tabix -p vcf "${vcf_dir}/${sample}.vcf.gz"
 
   # Step 3: Cleanup temporary files
   rm "${vcf_dir}/${sample}_temp.vcf.gz" "${vcf_dir}/${sample}_temp.vcf.gz.tbi"
