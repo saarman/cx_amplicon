@@ -49,7 +49,7 @@ for bam in *.bam; do
   fi
 
   # Step 1: Generate VCF from BAM using bcftools mpileup filter for mapping quality
-  bcftools mpileup -d 2000 -f "$ref" -q 20 "$bam" | \           # MQ filter of 20 (scale is to 60)
+  bcftools mpileup -d 2000 -f "$ref" -q 30 "$bam" | \           # MQ filter of 20 (scale is to 60)
   bcftools call -c -Oz -o "${vcf_dir}/${sample}_temp.vcf.gz"    # Output temporary compressed VCF
   tabix -p vcf  "${vcf_dir}/${sample}_temp.vcf.gz"              # Index the compressed VCF
 
