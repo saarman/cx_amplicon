@@ -74,3 +74,7 @@ chmod -R g+w "$out_dir" "$vcf_dir"
 samtools faidx "$ref" ON563187.1:1-712
 
 ```
+## Ideas for improvement
+Separate pipelines for COI from mosquito genes, from step 3 on.
+COI: use a consensus for vertebrates as the single reference, and use extremely lenient settings
+Mosquito: allow for gap opening, especially for cqm1 
