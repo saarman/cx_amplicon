@@ -6,7 +6,7 @@
 #SBATCH --mem=24576                               # Memory in MB
 #SBATCH --nodes=1                                 # Number of nodes
 #SBATCH --ntasks-per-node=4                       # Number of CPU cores per node
-#SBATCH --job-name="vcf-q30"                    # Job name for SLURM queue
+#SBATCH --job-name="vcf"                    # Job name for SLURM queue
 
 # Optional email notifications (uncomment if needed)
 # #SBATCH --mail-user=emily.calhoun@usu.edu
