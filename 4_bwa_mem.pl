@@ -44,8 +44,8 @@ foreach my $fq1 (@ARGV) {  # Iterate over each file passed as an argument
 
         # my $cmd = "$bwa mem -M -t 4 $ref $fq1 $fq2 | $samclip --ref $primers --max 50 | $samtools view -b | $samtools sort --threads 4 > ${output_dir}/${ind}.bam";
 
-        my $cmd = "$bwa mem -M -t 4 $ref $fq1 $fq2 | $samtools view -b | $samtools sort --threads 4 > ${output_dir}/${ind}.bam";
-
+        my $cmd = "$bwa mem -M -t 4 -B 2 -O 4,4 -E 2,2 -k 15 -T 20 $ref $fq1 $fq2 | $samtools view -b | $samtools sort --threads 4 > ${output_dir}/${ind}.bam";
+        
         system($cmd) == 0 or die "system $cmd failed: $?";   
 
         print "Alignment completed for $ind\n";
@@ -57,6 +57,23 @@ foreach my $fq1 (@ARGV) {  # Iterate over each file passed as an argument
 }
 
 $pm->wait_all_children;  # Wait for all child processes to finish
+
+
+###################################
+# Explanation of parameter choice
+###################################
+#
+#-B 2: Lower mismatch penalty, allowing for more mismatches.
+#
+#-O 4,4: Lower gap open penalties for both insertions and deletions.
+#
+#-E 2,2: Reduced gap extension penalties, making long gaps less penalizing.
+#
+#-k 15: Allows shorter seeds, increasing alignment sensitivity.
+#
+#-T 20: Lowers the threshold for reporting alignments, capturing more divergent reads.
+#
+
 
 
 # bwa-mem2 mem #options
