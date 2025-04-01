@@ -51,7 +51,7 @@ for vcf in *.vcf.gz; do
     # --missing N masks low-coverage positions (./. in VCF) with Ns
 
     samtools faidx "$ref" "$region" | \
-   bcftools consensus --missing N "${sample}.vcf.gz" | \
+    bcftools consensus --missing N "${sample}.vcf.gz" | \
     awk -v sample="$sample" -v region="$region" '/^>/{print ">"sample"|"region; next} {print}' > \
     "${out_dir}/${gene}/${sample}_${gene}_${clean_region}_consensus.fa"
 
