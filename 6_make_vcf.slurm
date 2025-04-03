@@ -44,9 +44,7 @@ for bam in *.bam; do
   sample=$(basename "$bam" .bam)  # Get sample name by stripping the .bam extension
 
   # Index the BAM file if the index doesn't already exist
-  if [ ! -f "${bam}.bai" ] && [ ! -f "${sample}.bai" ]; then
-    samtools index "$bam"
-  fi
+  samtools index "$bam"
 
   # Generate VCF from BAM using bcftools mpileup + call + q20 filter
   # -d 2000 sets a high depth cap suitable for amplicon sequencing
