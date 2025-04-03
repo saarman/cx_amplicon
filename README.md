@@ -105,6 +105,11 @@ culex_cqm1_ace2_REF.fasta
 7. freebayes: haplotype-aware variant calling (phasing included, step not in ddRAD)
 8. vcftools: filtering snps and haplotypes, or diverge entirely to analyze haplotypes (optional extra information)
 
+# View a VCF file:
+```
+module load bcftools
+bcftools view yourfile.vcf | less -S
+```
 
 # Directory structure:
 
