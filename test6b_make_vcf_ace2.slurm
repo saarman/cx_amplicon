@@ -40,7 +40,7 @@ chmod -R g+w ../*
 cd "$bam_dir"
 
 # Loop over all BAM files in the directory
-for bam in *.bam; do
+for bam in `echo B053-UT-M07101-240702*.bam B054-UT-M07101-240702*.bam B292-UT-M70330-240718*.bam B002-UT-M07101-240702*.bam B002-UT-M70330-240718*bam`; do
   sample=$(basename "$bam" .bam)  # Get sample name by stripping the .bam extension
 
   # Index the BAM file if the index doesn't already exist
