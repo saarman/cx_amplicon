@@ -44,8 +44,8 @@ chmod -R g+w ../*
 # Move into the BAM directory to simplify file handling
 cd "$bam_dir" || { echo "Error: Cannot change to BAM directory: $bam_dir"; exit 1; }
 
-# Loop over all BAM files matching the pattern
-for bam in B002-UT-M70330*.bam; do
+# Loop over all BAM files in the directory
+for bam in *.bam; do
     # Check if the BAM file exists
     if [[ ! -f "$bam" ]]; then
         echo "Warning: No BAM files matching pattern: $bam"
