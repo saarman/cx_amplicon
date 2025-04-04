@@ -48,7 +48,7 @@ for bam in `echo B053-UT-M07101-240702*.bam B054-UT-M07101-240702*.bam B292-UT-M
 
   # Generate VCF from BAM using bcftools mpileup + call + q20 filter
   # -d 2000 sets a high depth cap suitable for amplicon sequencing
-  bcftools mpileup -d 2000 -f "$ref" -q 20 -Q 13 -a DP "$bam" | \         # -a ensures DP is included
+  bcftools mpileup -d 2000 -f "$ref" -q 20 -Q 13 -a "$bam" | \         # -a ensures DP is included
   bcftools call -c -Ov -o "${vcf_dir}/${sample}_temp.vcf"
 
   # 2. Filter for depth (DP >= 50)
