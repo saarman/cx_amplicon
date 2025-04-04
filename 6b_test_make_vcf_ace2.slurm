@@ -6,7 +6,7 @@
 #SBATCH --mem=24576                               # Memory in MB
 #SBATCH --nodes=1                                 # Number of nodes
 #SBATCH --ntasks-per-node=4                       # Number of CPU cores per node
-#SBATCH --job-name="vcf"                    # Job name for SLURM queue
+#SBATCH --job-name="vcf"                          # Job name for SLURM queue
 
 # Optional email notifications (uncomment if needed)
 # #SBATCH --mail-user=emily.calhoun@usu.edu
@@ -14,10 +14,10 @@
 # #SBATCH --mail-type=END
 # #SBATCH --mail-type=FAIL
 
-# NOTE: Working directory /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_NS/cx_amplicon_scripts
+# Working directory /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_NS/cx_amplicon_scripts
 
 # Load required software modules
-module load bwa/2020_03_19
+module load freebayes/1.3.9
 module load samtools/1.16
 module load bcftools/1.16
 module load htslib
@@ -55,22 +55,26 @@ for bam in B053-UT-M07101-240702*.bam B054-UT-M07101-240702*.bam B292-UT-M70330-
     echo "Reindexing BAM file: $bam"
     samtools index "$bam" || { echo "Error indexing BAM file: $bam"; continue; }
 
-    # 1. Generate genotype likelihoods (BCF format is recommended for phasing)
-    echo "Generating genotype likelihoods for: $sample"
-    bcftools mpileup -d 2000 -f "$ref" -q 20 -Q 13 "$bam" -Ou | \
-    bcftools call -m -v -Oz -o "${vcf_dir}/${sample}_raw.vcf.gz" || { echo "Error in mpileup or call for $sample"; continue; }
+    # 1. Call variants using FreeBayes (haplotype-aware)
+    echo "Calling variants for: $sample using FreeBayes"
+    freebayes -f "$ref" \
+        --ploidy 2 \
+        --min-base-quality 13 \
+        --min-mapping-quality 20 \
+        --haplotype-length 100 \
+        --min-alternate-fraction 0.2 \
+        --min-coverage 10 \
+        --genotype-qualities \
+        "$bam" > "${vcf_dir}/${sample}_raw.vcf" || { echo "Error calling variants with FreeBayes for $sample"; continue; }
 
-    # 2. Index the raw VCF file
-    echo "Indexing raw VCF: ${sample}_raw.vcf.gz"
-    bcftools index "${vcf_dir}/${sample}_raw.vcf.gz" || { echo "Error indexing raw VCF for $sample"; continue; }
+    # Compress and index the VCF file
+    echo "Compressing and indexing raw VCF: ${sample}_raw.vcf"
+    bgzip -f "${vcf_dir}/${sample}_raw.vcf"
+    tabix -p vcf "${vcf_dir}/${sample}_raw.vcf.gz" || { echo "Error indexing raw VCF for $sample"; continue; }
 
-    # 3. Phase the haplotypes
-    echo "Phasing haplotypes for: $sample"
-    bcftools phase -O z -o "${vcf_dir}/${sample}_phased.vcf.gz" "${vcf_dir}/${sample}_raw.vcf.gz" || { echo "Error phasing for $sample"; continue; }
-
-    # 4. Filter for depth (DP >= 10)
-    echo "Filtering phased VCF for depth (DP >= 10): $sample"
-    bcftools view -i 'DP>=10' "${vcf_dir}/${sample}_phased.vcf.gz" -Oz -o "${vcf_dir}/${sample}_filtered_phased.vcf.gz" || { echo "Error filtering VCF for $sample"; continue; }
+    # 4. Filter for depth (DP >= 10) and specify region
+    echo "Filtering raw VCF for depth (DP >= 10) and region (ON563187.1:1-712): $sample"
+    bcftools view -r "ON563187.1:1-712" -i 'DP>=10' "${vcf_dir}/${sample}_raw.vcf.gz" -Oz -o "${vcf_dir}/${sample}_filtered_phased.vcf.gz" || { echo "Error filtering VCF for $sample"; continue; }
 
     # 5. Index the filtered phased VCF file
     echo "Indexing filtered phased VCF: ${sample}_filtered_phased.vcf.gz"
@@ -82,8 +86,7 @@ for bam in B053-UT-M07101-240702*.bam B054-UT-M07101-240702*.bam B292-UT-M70330-
 
     # Cleanup intermediate VCF files to save space
     echo "Cleaning up intermediate files for: $sample"
-    rm -f "${vcf_dir}/${sample}_raw.vcf.gz" "${vcf_dir}/${sample}_raw.vcf.gz.csi" \
-          "${vcf_dir}/${sample}_phased.vcf.gz" "${vcf_dir}/${sample}_phased.vcf.gz.csi"
+    rm -f "${vcf_dir}/${sample}_raw.vcf.gz" "${vcf_dir}/${sample}_raw.vcf.gz.tbi"
     
     echo "Completed processing for: $sample"
 done
