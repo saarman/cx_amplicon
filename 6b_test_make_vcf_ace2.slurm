@@ -62,8 +62,7 @@ for bam in B002-UT-M70330*.bam; do
         --ploidy 2 \
         --min-base-quality 13 \
         --min-mapping-quality 20 \
-        --haplotype-length 100 \
-        # --min-alternate-fraction 0.2 \
+        --haplotype-length 100 \  # --min-alternate-fraction 0.2 \
         --min-coverage 3 \
         --genotype-qualities \
         "$bam" > "${vcf_dir}/${sample}_ace2_raw.tmp" || { echo "Error calling variants with FreeBayes for $sample"; continue; }
