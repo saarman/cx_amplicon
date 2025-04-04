@@ -52,10 +52,6 @@ for bam in B053-UT-M07101-240702*.bam B054-UT-M07101-240702*.bam B292-UT-M70330-
     sample=$(basename "$bam" .bam)  # Get sample name by stripping the .bam extension
     echo "Processing sample: $sample"
 
-    # TEMP
-    bcftools view "${vcf_dir}/${sample}_raw.vcf" | head -n 20
-    bcftools view -h "${vcf_dir}/${sample}_raw.vcf" | grep -E "^##FORMAT|^##INFO"
-
     # Always reindex the BAM file to ensure accuracy
     echo "Reindexing BAM file: $bam"
     samtools index "$bam" || { echo "Error indexing BAM file: $bam"; continue; }
@@ -85,8 +81,8 @@ for bam in B053-UT-M07101-240702*.bam B054-UT-M07101-240702*.bam B292-UT-M70330-
 
     # 4. Filter for depth (DP >= 10) and specify region
     echo "Filtering raw VCF for depth (DP >= 10) and region (ON563187.1:1-712): $sample"
-    bcftools view -r "ON563187.1:1-712" -i 'FORMAT/DP>=10' "${vcf_dir}/${sample}_raw.vcf.gz" -Oz -o "${vcf_dir}/${sample}_filtered_phased.vcf.gz" || { echo "Error filtering VCF for $sample"; continue; }
-
+    bcftools view -r "ON563187.1:1-712" -i 'INFO/DP>=10 || FORMAT/DP>=10' "${vcf_dir}/${sample}_raw.vcf.gz" -Oz -o "${vcf_dir}/${sample}_filtered_phased.vcf.gz" || { echo "Error filtering VCF for $sample"; continue; }
+    
     # Check if the filtered VCF file is non-empty
     if [[ ! -s "${vcf_dir}/${sample}_filtered_phased.vcf.gz" ]]; then
         echo "Warning: Filtered VCF is empty for $sample, skipping consensus generation"
