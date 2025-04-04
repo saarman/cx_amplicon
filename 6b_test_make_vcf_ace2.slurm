@@ -57,7 +57,7 @@ for bam in B053-UT-M07101-240702*.bam B054-UT-M07101-240702*.bam B292-UT-M70330-
 
     # 1. Call variants using FreeBayes (haplotype-aware)
     echo "Calling variants for: $sample using FreeBayes"
-    /uufs/chpc.utah.edu/sys/installdir/r8/freebayes/1.3.9/scripts/freebayes -f "$ref" \
+    freebayes -f "$ref" \
         --ploidy 2 \
         --min-base-quality 13 \
         --min-mapping-quality 20 \
