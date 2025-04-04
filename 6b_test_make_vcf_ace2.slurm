@@ -66,23 +66,26 @@ for bam in B053-UT-M07101-240702*.bam B054-UT-M07101-240702*.bam B292-UT-M70330-
         --min-alternate-fraction 0.2 \
         --min-coverage 10 \
         --genotype-qualities \
-        "$bam" > "${vcf_dir}/${sample}_raw.vcf" || { echo "Error calling variants with FreeBayes for $sample"; continue; }
+        "$bam" > "${vcf_dir}/${sample}_raw.tmp" || { echo "Error calling variants with FreeBayes for $sample"; continue; }
 
     # Check if the raw VCF file was created successfully
-    if [[ ! -s "${vcf_dir}/${sample}_raw.vcf" ]]; then
+    if [[ ! -s "${vcf_dir}/${sample}_raw.tmp" ]]; then
         echo "Error: Raw VCF file is empty for $sample"
         continue
     fi
 
+    # Rename the temporary file to the final VCF
+    mv "${vcf_dir}/${sample}_raw.tmp" "${vcf_dir}/${sample}_raw.vcf"
+
     # Compress and index the VCF file
     echo "Compressing and indexing raw VCF: ${sample}_raw.vcf"
-    bgzip -f "${vcf_dir}/${sample}_raw.vcf" || { echo "Error compressing VCF for $sample"; continue; }
+    bgzip -c "${vcf_dir}/${sample}_raw.vcf" > "${vcf_dir}/${sample}_raw.vcf.gz" || { echo "Error compressing VCF for $sample"; continue; }
     tabix -p vcf "${vcf_dir}/${sample}_raw.vcf.gz" || { echo "Error indexing raw VCF for $sample"; continue; }
 
     # 4. Filter for depth (DP >= 10) and specify region
     echo "Filtering raw VCF for depth (DP >= 10) and region (ON563187.1:1-712): $sample"
     bcftools view -r "ON563187.1:1-712" -i 'INFO/DP>=10 || FORMAT/DP>=10' "${vcf_dir}/${sample}_raw.vcf.gz" -Oz -o "${vcf_dir}/${sample}_filtered_phased.vcf.gz" || { echo "Error filtering VCF for $sample"; continue; }
-    
+
     # Check if the filtered VCF file is non-empty
     if [[ ! -s "${vcf_dir}/${sample}_filtered_phased.vcf.gz" ]]; then
         echo "Warning: Filtered VCF is empty for $sample, skipping consensus generation"
@@ -107,7 +110,6 @@ for bam in B053-UT-M07101-240702*.bam B054-UT-M07101-240702*.bam B292-UT-M70330-
     
     echo "Completed processing for: $sample"
 done
-
 
 echo "All BAM files processed successfully."
 
