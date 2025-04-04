@@ -82,9 +82,9 @@ for bam in B053-UT-M07101-240702*.bam B054-UT-M07101-240702*.bam B292-UT-M70330-
     bgzip -c "${vcf_dir}/${sample}_raw.vcf" > "${vcf_dir}/${sample}_raw.vcf.gz" || { echo "Error compressing VCF for $sample"; continue; }
     tabix -p vcf "${vcf_dir}/${sample}_raw.vcf.gz" || { echo "Error indexing raw VCF for $sample"; continue; }
 
-    # 4. Filter for depth (DP >= 10) and specify region
-    echo "Filtering raw VCF for depth (DP >= 10) and region (ON563187.1:1-712): $sample"
-    bcftools view -r "ON563187.1:1-712" -i 'INFO/DP>=10 || FORMAT/DP>=10' "${vcf_dir}/${sample}_raw.vcf.gz" -Oz -o "${vcf_dir}/${sample}_filtered_phased.vcf.gz" || { echo "Error filtering VCF for $sample"; continue; }
+    # 4. Filter for depth (DP >= 5) and specify region ### FINAL VERSION CHANGE TO DP >= 10
+    echo "Filtering raw VCF for depth (DP >= 5) and region (ON563187.1:1-712): $sample"  
+    bcftools view -r "ON563187.1:1-712" -i 'INFO/DP>=5 || FORMAT/DP>=5' "${vcf_dir}/${sample}_raw.vcf.gz" -Oz -o "${vcf_dir}/${sample}_filtered_phased.vcf.gz" || { echo "Error filtering VCF for $sample"; continue; }
 
     # Check if the filtered VCF file is non-empty
     if [[ ! -s "${vcf_dir}/${sample}_filtered_phased.vcf.gz" ]]; then
