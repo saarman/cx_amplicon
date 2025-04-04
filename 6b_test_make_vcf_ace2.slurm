@@ -63,7 +63,7 @@ for bam in B002-UT-M70330*.bam; do
         --min-base-quality 13 \
         --min-mapping-quality 20 \
         --haplotype-length 100 \
-        --min-alternate-fraction 0.2 \
+        # --min-alternate-fraction 0.2 \
         --min-coverage 4 \
         --genotype-qualities \
         "$bam" > "${vcf_dir}/${sample}_raw_ace2.tmp" || { echo "Error calling variants with FreeBayes for $sample"; continue; }
@@ -82,9 +82,9 @@ for bam in B002-UT-M70330*.bam; do
     bgzip -c "${vcf_dir}/${sample}_raw_ace2.vcf" > "${vcf_dir}/${sample}_raw_ace2.vcf.gz" || { echo "Error compressing VCF for $sample"; continue; }
     tabix -p vcf "${vcf_dir}/${sample}_raw_ace2.vcf.gz" || { echo "Error indexing raw_ace2 VCF for $sample"; continue; }
 
-    # 4. Filter for depth (DP >= 5) and specify region ### FINAL VERSION CHANGE TO DP >= 10
-    echo "Filtering raw_ace2 VCF for depth (DP >= 5) and region (ON563187.1:1-712): $sample"  
-    bcftools view -r "ON563187.1:1-712" -i 'INFO/DP>=5 || FORMAT/DP>=5' "${vcf_dir}/${sample}_raw_ace2.vcf.gz" -Oz -o "${vcf_dir}/${sample}_filtered_phased.vcf.gz" || { echo "Error filtering VCF for $sample"; continue; }
+    # 4. Filter for depth (DP >= 4) and specify region ### FINAL VERSION CHANGE TO DP >= 10
+    echo "Filtering raw_ace2 VCF for depth (DP >= 4) and region (ON563187.1:1-712): $sample"  
+    bcftools view -r "ON563187.1:1-712" -i 'INFO/DP>=4 || FORMAT/DP>=4' "${vcf_dir}/${sample}_raw_ace2.vcf.gz" -Oz -o "${vcf_dir}/${sample}_filtered_phased.vcf.gz" || { echo "Error filtering VCF for $sample"; continue; }
 
     # Check if the filtered VCF file is non-empty
     if [[ ! -s "${vcf_dir}/${sample}_filtered_phased.vcf.gz" ]]; then
