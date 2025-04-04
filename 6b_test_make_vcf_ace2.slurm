@@ -42,7 +42,7 @@ cd "$bam_dir" || { echo "Error: Cannot change to BAM directory: $bam_dir"; exit 
 
 
 # Loop over all BAM files matching the pattern
-for bam in B053-UT-M07101-240702*.bam B054-UT-M07101-240702*.bam B292-UT-M70330-240718*.bam B002-UT-M07101-240702*.bam B002-UT-M70330-240718*.bam; do
+for bam in B002-UT-M70330*.bam; do
     # Check if the BAM file exists
     if [[ ! -f "$bam" ]]; then
         echo "Warning: No BAM files matching pattern: $bam"
