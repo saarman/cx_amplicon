@@ -66,25 +66,25 @@ for bam in B053-UT-M07101-240702*.bam B054-UT-M07101-240702*.bam B292-UT-M70330-
         --min-alternate-fraction 0.2 \
         --min-coverage 10 \
         --genotype-qualities \
-        "$bam" > "${vcf_dir}/${sample}_raw.tmp" || { echo "Error calling variants with FreeBayes for $sample"; continue; }
+        "$bam" > "${vcf_dir}/${sample}_raw_ace2.tmp" || { echo "Error calling variants with FreeBayes for $sample"; continue; }
 
     # Check if the raw VCF file was created successfully
-    if [[ ! -s "${vcf_dir}/${sample}_raw.tmp" ]]; then
+    if [[ ! -s "${vcf_dir}/${sample}_raw_ace2.tmp" ]]; then
         echo "Error: Raw VCF file is empty for $sample"
         continue
     fi
 
     # Rename the temporary file to the final VCF
-    mv "${vcf_dir}/${sample}_raw.tmp" "${vcf_dir}/${sample}_raw.vcf"
+    mv "${vcf_dir}/${sample}_raw_ace2.tmp" "${vcf_dir}/${sample}_raw_ace2.vcf"
 
     # Compress and index the VCF file
-    echo "Compressing and indexing raw VCF: ${sample}_raw.vcf"
-    bgzip -c "${vcf_dir}/${sample}_raw.vcf" > "${vcf_dir}/${sample}_raw.vcf.gz" || { echo "Error compressing VCF for $sample"; continue; }
-    tabix -p vcf "${vcf_dir}/${sample}_raw.vcf.gz" || { echo "Error indexing raw VCF for $sample"; continue; }
+    echo "Compressing and indexing raw_ace2 VCF: ${sample}_raw_ace2.vcf"
+    bgzip -c "${vcf_dir}/${sample}_raw_ace2.vcf" > "${vcf_dir}/${sample}_raw_ace2.vcf.gz" || { echo "Error compressing VCF for $sample"; continue; }
+    tabix -p vcf "${vcf_dir}/${sample}_raw_ace2.vcf.gz" || { echo "Error indexing raw_ace2 VCF for $sample"; continue; }
 
     # 4. Filter for depth (DP >= 5) and specify region ### FINAL VERSION CHANGE TO DP >= 10
-    echo "Filtering raw VCF for depth (DP >= 5) and region (ON563187.1:1-712): $sample"  
-    bcftools view -r "ON563187.1:1-712" -i 'INFO/DP>=5 || FORMAT/DP>=5' "${vcf_dir}/${sample}_raw.vcf.gz" -Oz -o "${vcf_dir}/${sample}_filtered_phased.vcf.gz" || { echo "Error filtering VCF for $sample"; continue; }
+    echo "Filtering raw_ace2 VCF for depth (DP >= 5) and region (ON563187.1:1-712): $sample"  
+    bcftools view -r "ON563187.1:1-712" -i 'INFO/DP>=5 || FORMAT/DP>=5' "${vcf_dir}/${sample}_raw_ace2.vcf.gz" -Oz -o "${vcf_dir}/${sample}_filtered_phased.vcf.gz" || { echo "Error filtering VCF for $sample"; continue; }
 
     # Check if the filtered VCF file is non-empty
     if [[ ! -s "${vcf_dir}/${sample}_filtered_phased.vcf.gz" ]]; then
@@ -106,7 +106,7 @@ for bam in B053-UT-M07101-240702*.bam B054-UT-M07101-240702*.bam B292-UT-M70330-
 
     # Cleanup intermediate VCF files to save space
     echo "Cleaning up intermediate files for: $sample"
-    rm -f "${vcf_dir}/${sample}_raw.vcf.gz" "${vcf_dir}/${sample}_raw.vcf.gz.tbi"
+    rm -f "${vcf_dir}/${sample}_raw_ace2.vcf.gz" "${vcf_dir}/${sample}_raw_ace2.vcf.gz.tbi"
     
     echo "Completed processing for: $sample"
 done
