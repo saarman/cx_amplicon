@@ -64,49 +64,49 @@ for bam in B002-UT-M70330*.bam; do
         --min-mapping-quality 20 \
         --haplotype-length 100 \
         # --min-alternate-fraction 0.2 \
-        --min-coverage 4 \
+        --min-coverage 3 \
         --genotype-qualities \
-        "$bam" > "${vcf_dir}/${sample}_raw_ace2.tmp" || { echo "Error calling variants with FreeBayes for $sample"; continue; }
+        "$bam" > "${vcf_dir}/${sample}_ace2_raw.tmp" || { echo "Error calling variants with FreeBayes for $sample"; continue; }
 
     # Check if the raw VCF file was created successfully
-    if [[ ! -s "${vcf_dir}/${sample}_raw_ace2.tmp" ]]; then
+    if [[ ! -s "${vcf_dir}/${sample}_ace2_raw.tmp" ]]; then
         echo "Error: Raw VCF file is empty for $sample"
         continue
     fi
 
-    # Rename the temporary file to the final VCF
-    mv "${vcf_dir}/${sample}_raw_ace2.tmp" "${vcf_dir}/${sample}_raw_ace2.vcf"
+    # Rename the temporary file to the raw VCF
+    mv "${vcf_dir}/${sample}_ace2_raw.tmp" "${vcf_dir}/${sample}_ace2_raw.vcf"
 
     # Compress and index the VCF file
-    echo "Compressing and indexing raw_ace2 VCF: ${sample}_raw_ace2.vcf"
-    bgzip -c "${vcf_dir}/${sample}_raw_ace2.vcf" > "${vcf_dir}/${sample}_raw_ace2.vcf.gz" || { echo "Error compressing VCF for $sample"; continue; }
-    tabix -p vcf "${vcf_dir}/${sample}_raw_ace2.vcf.gz" || { echo "Error indexing raw_ace2 VCF for $sample"; continue; }
+    echo "Compressing and indexing ace2_raw VCF: ${sample}_ace2_raw.vcf"
+    bgzip -c "${vcf_dir}/${sample}_ace2_raw.vcf" > "${vcf_dir}/${sample}_ace2_raw.vcf.gz" || { echo "Error compressing VCF for $sample"; continue; }
+    tabix -p vcf "${vcf_dir}/${sample}_ace2_raw.vcf.gz" || { echo "Error indexing ace2_raw VCF for $sample"; continue; }
 
-    # 4. Filter for depth (DP >= 4) and specify region ### FINAL VERSION CHANGE TO DP >= 10
-    echo "Filtering raw_ace2 VCF for depth (DP >= 4) and region (ON563187.1:1-712): $sample"  
-    bcftools view -r "ON563187.1:1-712" -i 'INFO/DP>=4 || FORMAT/DP>=4' "${vcf_dir}/${sample}_raw_ace2.vcf.gz" -Oz -o "${vcf_dir}/${sample}_filtered_phased.vcf.gz" || { echo "Error filtering VCF for $sample"; continue; }
+    # 4. Filter for depth (DP >= 5) and specify region ### FINAL VERSION CHANGE TO DP >= 10
+    echo "Filtering ace2_raw VCF for depth (DP >= 5) and region (ON563187.1:1-712): $sample"  
+    bcftools view -r "ON563187.1:1-712" -i 'INFO/DP>=5 || FORMAT/DP>=5' "${vcf_dir}/${sample}_ace2_raw.vcf.gz" -Oz -o "${vcf_dir}/${sample}_filtered_ace2_phased.vcf.gz" || { echo "Error filtering VCF for $sample"; continue; }
 
     # Check if the filtered VCF file is non-empty
-    if [[ ! -s "${vcf_dir}/${sample}_filtered_phased.vcf.gz" ]]; then
+    if [[ ! -s "${vcf_dir}/${sample}_filtered_ace2_phased.vcf.gz" ]]; then
         echo "Warning: Filtered VCF is empty for $sample, skipping consensus generation"
         continue
     fi
 
-    # 5. Index the filtered phased VCF file
-    echo "Indexing filtered phased VCF: ${sample}_filtered_phased.vcf.gz"
-    tabix -p vcf "${vcf_dir}/${sample}_filtered_phased.vcf.gz" || { echo "Error indexing filtered VCF for $sample"; continue; }
+    # 5. Index the filtered ace2_phased VCF file
+    echo "Indexing filtered ace2_phased VCF: ${sample}_filtered_ace2_phased.vcf.gz"
+    tabix -p vcf "${vcf_dir}/${sample}_filtered_ace2_phased.vcf.gz" || { echo "Error indexing filtered VCF for $sample"; continue; }
 
-    # 6. Generate a consensus sequence from the phased VCF if it contains variants
-    if bcftools view -H "${vcf_dir}/${sample}_filtered_phased.vcf.gz" | head -n 1 | grep -qv "^#"; then
+    # 6. Generate a consensus sequence from the ace2_phased VCF if it contains variants
+    if bcftools view -H "${vcf_dir}/${sample}_filtered_ace2_phased.vcf.gz" | head -n 1 | grep -qv "^#"; then
         echo "Generating consensus sequence for: $sample"
-        bcftools consensus -f "$ref" "${vcf_dir}/${sample}_filtered_phased.vcf.gz" > "${vcf_dir}/${sample}_phased_consensus.fa" || { echo "Error generating consensus for $sample"; continue; }
+        bcftools consensus -f "$ref" "${vcf_dir}/${sample}_filtered_ace2_phased.vcf.gz" > "${vcf_dir}/${sample}_ace2_phased_consensus.fa" || { echo "Error generating consensus for $sample"; continue; }
     else
         echo "No variants found in filtered VCF for $sample, skipping consensus"
     fi
 
     # Cleanup intermediate VCF files to save space
     echo "Cleaning up intermediate files for: $sample"
-    rm -f "${vcf_dir}/${sample}_raw_ace2.vcf.gz" "${vcf_dir}/${sample}_raw_ace2.vcf.gz.tbi"
+    rm -f "${vcf_dir}/${sample}_ace2_raw.vcf.gz" "${vcf_dir}/${sample}_ace2_raw.vcf.gz.tbi"
     
     echo "Completed processing for: $sample"
 done
