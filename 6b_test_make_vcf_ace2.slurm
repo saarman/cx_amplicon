@@ -31,8 +31,8 @@ ref="../cx_amplicon_bwa/ref/ace2_cqm1_coi.fasta"     # Reference FASTA file
 mkdir -p "$vcf_dir"
 
 # Index the reference FASTA file each time (to account for updates)
-echo "Indexing reference FASTA: $ref"
-samtools faidx "$ref" || { echo "Error indexing reference"; exit 1; }
+# echo "Indexing reference FASTA: $ref"
+# samtools faidx "$ref" || { echo "Error indexing reference"; exit 1; }
 
 # Apply group write permissions to all directories above (for collaboration or shared environments)
 chmod -R g+w ../*
@@ -74,7 +74,7 @@ for bam in B053-UT-M07101-240702*.bam B054-UT-M07101-240702*.bam B292-UT-M70330-
 
     # 4. Filter for depth (DP >= 10) and specify region
     echo "Filtering raw VCF for depth (DP >= 10) and region (ON563187.1:1-712): $sample"
-    bcftools view -r "ON563187.1:1-712" -i 'DP>=10' "${vcf_dir}/${sample}_raw.vcf.gz" -Oz -o "${vcf_dir}/${sample}_filtered_phased.vcf.gz" || { echo "Error filtering VCF for $sample"; continue; }
+    bcftools view -r "ON563187.1:1-712" -i 'FORMAT/DP>=10' "${vcf_dir}/${sample}_raw.vcf.gz" -Oz -o "${vcf_dir}/${sample}_filtered_phased.vcf.gz" || { echo "Error filtering VCF for $sample"; continue; }
 
     # 5. Index the filtered phased VCF file
     echo "Indexing filtered phased VCF: ${sample}_filtered_phased.vcf.gz"
