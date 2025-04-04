@@ -101,10 +101,10 @@ for bam in B002-UT-M70330*.bam; do
     # 6. Generate a consensus sequence from the ace2_phased VCF if it contains variants
     if bcftools view -H "${vcf_dir}/${sample}_filtered_ace2_phased.vcf.gz" | head -n 1 | grep -qv "^#"; then
         echo "Generating consensus sequence for: $sample"
-        bcftools consensus -f "$ref" "${vcf_dir}/${sample}_filtered_ace2_phased.vcf.gz" > "${vcf_dir}/${sample}_ace2_phased_consensus.fa" || { echo "Error generating consensus for $sample"; continue; }
+        bcftools consensus -f "$ref" "${vcf_dir}/${sample}_filtered_ace2_phased.vcf.gz" > "${con_dir}/${sample}_ace2_phased_consensus.fa" || { echo "Error generating consensus for $sample"; continue; }
         echo "Extracting haplotypes for: $sample"
-        vcftools --vcf ${vcf_dir}/${sample}_filtered_ace2_phased.vcf.gz --phased --extract-FORMAT-info GT --out ${vcf_dir}/${sample}_filtered_ace2_haplotypes
-        awk '{print ">"$1"_"$2"\n"$5"\n>"$1"_"$2"_alt\n"$6}' ${vcf_dir}/${sample}_filtered_ace2_haplotypes > "${vcf_dir}/${sample}_filtered_ace2_haplotypes.fa" || { echo "Error generating haplotypes for $sample"; continue; }   
+        vcftools --vcf ${vcf_dir}/${sample}_filtered_ace2_phased.vcf.gz --phased --extract-FORMAT-info GT --out ${hap_dir}/${sample}_filtered_ace2_haplotypes
+        awk '{print ">"$1"_"$2"\n"$5"\n>"$1"_"$2"_alt\n"$6}' ${hap_dir}/${sample}_filtered_ace2_haplotypes > "${hap_dir}/${sample}_filtered_ace2_haplotypes.fa" || { echo "Error generating haplotypes for $sample"; continue; }   
     else
         echo "No variants found in filtered VCF for $sample, skipping consensus"
     fi
