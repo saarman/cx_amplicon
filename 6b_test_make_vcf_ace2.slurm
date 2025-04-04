@@ -58,13 +58,13 @@ for bam in B002-UT-M70330*.bam; do
 
     # 1. Call variants using FreeBayes (haplotype-aware)
     echo "Calling variants for: $sample using FreeBayes"
-    /uufs/chpc.utah.edu/sys/installdir/freebayes/1.3.4/freebayes -f "$ref" \
+    freebayes -f "$ref" \
         --ploidy 2 \
         --min-base-quality 13 \
         --min-mapping-quality 20 \
         --haplotype-length 100 \
         --min-alternate-fraction 0.2 \
-        --min-coverage 10 \
+        --min-coverage 4 \
         --genotype-qualities \
         "$bam" > "${vcf_dir}/${sample}_raw_ace2.tmp" || { echo "Error calling variants with FreeBayes for $sample"; continue; }
 
