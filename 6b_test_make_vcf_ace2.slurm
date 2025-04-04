@@ -107,7 +107,10 @@ for bam in B002-UT-M70330*.bam; do
     # Cleanup intermediate VCF files to save space
     echo "Cleaning up intermediate files for: $sample"
     rm -f "${vcf_dir}/${sample}_ace2_raw.vcf.gz" "${vcf_dir}/${sample}_ace2_raw.vcf.gz.tbi"
-    
+
+    # Extract haplotypes from VCF
+    vcftools --vcf output.vcf --phased --extract-FORMAT-info GT --out haplotypes
+
     echo "Completed processing for: $sample"
 done
 
