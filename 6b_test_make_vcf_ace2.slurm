@@ -46,19 +46,26 @@ for bam in `echo B053-UT-M07101-240702*.bam B054-UT-M07101-240702*.bam B292-UT-M
   # Index the BAM file if the index doesn't already exist
   samtools index "$bam"
 
-  # Generate VCF from BAM using bcftools mpileup + call + q20 filter
-  # -d 2000 sets a high depth cap suitable for amplicon sequencing
-  bcftools mpileup -d 2000 -f "$ref" -q 20 -Q 13 -a "$bam" | \         # -a ensures DP is included
-  bcftools call -c -Ov -o "${vcf_dir}/${sample}_temp.vcf"
+  # 1. Generate genotype likelihoods (BCF format is recommended for phasing)
+  bcftools mpileup -d 2000 -f "$ref" -q 20 -Q 13 "$bam" -Ou | \
+  bcftools call -m -v -Oz -o "${vcf_dir}/${sample}_raw.vcf.gz"
 
-  # 2. Filter for depth (DP >= 50)
-  bcftools view -i 'DP>=10' "${vcf_dir}/${sample}_temp.vcf" -Ov -o "${vcf_dir}/${sample}_ace2.vcf"
+  # 2. Index the raw VCF file
+  bcftools index "${vcf_dir}/${sample}_raw.vcf.gz"
 
-  # Compressing and indexing ${sample}.vcf...
-  bgzip -f "${vcf_dir}/${sample}_ace2.vcf"
-  tabix -p vcf "${vcf_dir}/${sample}_ace2.vcf.gz"
+  # 3. Phase the haplotypes
+  bcftools phase -O z -o "${vcf_dir}/${sample}_phased.vcf.gz" "${vcf_dir}/${sample}_raw.vcf.gz"
 
-  # Step 3: Cleanup temporary files
+  # 4. Filter for depth (DP >= 10)
+  bcftools view -i 'DP>=10' "${vcf_dir}/${sample}_phased.vcf.gz" -Oz -o "${vcf_dir}/${sample}_filtered_phased.vcf.gz"
+
+  # 5. Index the filtered phased VCF file
+  tabix -p vcf "${vcf_dir}/${sample}_filtered_phased.vcf.gz"
+
+  # 6. Generate a consensus sequence from the phased VCF
+  cat "$ref" | bcftools consensus "${vcf_dir}/${sample}_filtered_phased.vcf.gz" > "${vcf_dir}/${sample}_phased_consensus.fa"
+
+  # Cleanup temporary files
   rm "${vcf_dir}/${sample}_temp.vcf.gz" "${vcf_dir}/${sample}_temp.vcf.gz.tbi"
 done
 
