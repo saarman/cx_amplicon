@@ -17,7 +17,7 @@
 # Working directory /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_NS/cx_amplicon_scripts
 
 # Load required software modules
-module load freebayes/1.3.9
+module load freebayes/1.3.4
 module load samtools/1.16
 module load bcftools/1.16
 module load htslib
