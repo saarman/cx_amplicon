@@ -35,8 +35,8 @@ mkdir -p "$con_dir"
 mkdir -p "$hap_dir"
 
 # Index the reference FASTA file each time (to account for updates)
-# echo "Indexing reference FASTA: $ref"
-# samtools faidx "$ref" || { echo "Error indexing reference"; exit 1; }
+echo "Indexing reference FASTA: $ref"
+samtools faidx "$ref" || { echo "Error indexing reference"; exit 1; }
 
 # Apply group write permissions to all directories above (for collaboration or shared environments)
 chmod -R g+w ../*
@@ -65,7 +65,6 @@ for bam in *.bam; do
         --ploidy 2 \
         --min-base-quality 13 \
         --min-mapping-quality 20 \
-        --haplotype-length 100 \  # --min-alternate-fraction 0.2 \
         --min-coverage 3 \
         --genotype-qualities \
         "$bam" > "${vcf_dir}/${sample}_ace2_raw.tmp" || { echo "Error calling variants with FreeBayes for $sample"; continue; }
