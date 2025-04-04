@@ -25,10 +25,14 @@ module load htslib
 # Define input/output paths and filenames
 bam_dir="./../cx_amplicon_bwa"                      # Directory containing input BAM files
 vcf_dir="./../cx_amplicon_vcf"                       # Directory to store per-sample VCF files
+con_dir="./../cx_amplicon_consensus"                       # Directory to store per-sample consensus
+hap_dir="./../cx_amplicon_haplotype"                       # Directory to store per-sample haplotypes
 ref="../cx_amplicon_bwa/ref/ace2_cqm1_coi.fasta"     # Reference FASTA file
 
 # Ensure the output directory exists
 mkdir -p "$vcf_dir"
+mkdir -p "$con_dir"
+mkdir -p "$hap_dir"
 
 # Index the reference FASTA file each time (to account for updates)
 # echo "Indexing reference FASTA: $ref"
@@ -39,7 +43,6 @@ chmod -R g+w ../*
 
 # Move into the BAM directory to simplify file handling
 cd "$bam_dir" || { echo "Error: Cannot change to BAM directory: $bam_dir"; exit 1; }
-
 
 # Loop over all BAM files matching the pattern
 for bam in B002-UT-M70330*.bam; do
