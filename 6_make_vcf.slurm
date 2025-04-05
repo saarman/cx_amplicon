@@ -63,10 +63,6 @@ for bam in *.bam; do
   # Step 3: Compress and index the normalized VCF file
   tabix -p vcf "${vcf_dir}/${sample}_norm.vcf.gz"
 
-  # Step 4: Generate the consensus sequence from the normalized VCF
-  bcftools consensus -f "$ref" "${vcf_dir}/${sample}_norm.vcf.gz" > "${vcf_dir}/${sample}_consensus.fasta"
-
-  echo "Consensus for $sample generated: ${vcf_dir}/${sample}_consensus.fasta"
 done
 
 echo "All samples processed."
