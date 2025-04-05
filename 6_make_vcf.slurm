@@ -48,7 +48,7 @@ for bam in *.bam; do
     samtools index "$bam"
   fi
 
-  # Generate VCF from BAM using bcftools mpileup + call, no filtering
+  # Generate VCF from BAM using bcftools mpileup + call, filtering for mapping quality
   # -d 1000 sets a high depth cap suitable for amplicon sequencing
   bcftools mpileup -d 2000 -f "$ref" -q 20 "$bam" | \
   bcftools call -c -Ov -o "${vcf_dir}/${sample}_temp.vcf"
