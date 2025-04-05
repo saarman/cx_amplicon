@@ -53,14 +53,17 @@ for bam in *.bam; do
 
   echo "Processing sample: $sample"
 
-  # Step 1: Generate the VCF file with quality and depth filtering in mpileup
-  samtools mpileup -aa -d 10000 -q 20 -Q 13 -m $min_depth -f "$ref" "$bam" | \
-  bcftools call -c -Ov -o "${vcf_dir}/${sample}.vcf"
+  # Step 1: Generate the VCF file with quality filtering using bcftools mpileup
+  bcftools mpileup -Ou -f "$ref" -q 20 -Q 20 -d 10000 "$bam" | \
+  bcftools call -mv -Oz -o "${vcf_dir}/${sample}.vcf.gz"
 
-  # Step 2: Normalize indels to ensure proper representation
-  bcftools norm -f "$ref" "${vcf_dir}/${sample}.vcf" -Oz -o "${vcf_dir}/${sample}_norm.vcf.gz"
+  # Step 2: Filter the VCF by minimum per-sample depth
+  bcftools filter -i "FORMAT/DP >= $min_depth" -Oz -o "${vcf_dir}/${sample}_filtered.vcf.gz" "${vcf_dir}/${sample}.vcf.gz"
 
-  # Step 3: Compress and index the normalized VCF file
+  # Step 3: Normalize indels to ensure proper representation
+  bcftools norm -f "$ref" "${vcf_dir}/${sample}_filtered.vcf.gz" -Oz -o "${vcf_dir}/${sample}_norm.vcf.gz"
+
+  # Step 4: Index the normalized VCF file
   tabix -p vcf "${vcf_dir}/${sample}_norm.vcf.gz"
 
 done
