@@ -25,13 +25,16 @@ module load htslib
 # Define input/output paths and filenames
 bam_dir="./../cx_amplicon_bwa"                     # Directory containing input BAM files
 vcf_dir="./../cx_amplicon_vcf"                     # Directory to store per-sample VCF files
-ref="../cx_amplicon_bwa/ref/ace2_cqm1_coi.fasta"  # Reference FASTA file
+ref="../cx_amplicon_bwa/ref/ace2_cqm1_coi.fasta"   # Reference FASTA file
+min_depth=4                                       # Minimum depth for consensus
 
 # Ensure the output directory exists
 mkdir -p "$vcf_dir"
 
 # Index the reference FASTA if not already indexed (creates .fai file)
-samtools faidx "$ref"
+if [ ! -f "${ref}.fai" ]; then
+  samtools faidx "$ref"
+fi
 
 # Apply group write permissions to all directories above (for collaboration or shared environments)
 chmod -R g+w ../*
@@ -48,21 +51,25 @@ for bam in *.bam; do
     samtools index "$bam"
   fi
 
-  # Generate VCF from BAM using bcftools mpileup + call, filtering for mapping quality
-  # -d 2000 sets a high depth cap suitable for amplicon sequencing
-  bcftools mpileup -d 2000 -f "$ref" -q 20 "$bam" | \
-  bcftools call -c -Ov -o "${vcf_dir}/${sample}_temp.vcf"
+  echo "Processing sample: $sample"
 
-  # 2. Filter for depth (DP >= 10)  
-  bcftools view -i 'DP>=10' "${vcf_dir}/${sample}_temp.vcf" -Ov -o "${vcf_dir}/${sample}.vcf"
+  # Step 1: Generate the VCF file with quality and depth filtering in mpileup
+  samtools mpileup -aa -d 10000 -q 20 -Q 13 -m $min_depth -f "$ref" "$bam" | \
+  bcftools call -c -Ov -o "${vcf_dir}/${sample}.vcf"
 
-  # Compressing and indexing ${sample}.vcf...
-  bgzip -f "${vcf_dir}/${sample}.vcf"
-  tabix -p vcf "${vcf_dir}/${sample}.vcf.gz"
+  # Step 2: Normalize indels to ensure proper representation
+  bcftools norm -f "$ref" "${vcf_dir}/${sample}.vcf" -Oz -o "${vcf_dir}/${sample}_norm.vcf.gz"
 
-  # Step 3: Cleanup temporary files
-  rm "${vcf_dir}/${sample}_temp.vcf.gz" "${vcf_dir}/${sample}_temp.vcf.gz.tbi"
+  # Step 3: Compress and index the normalized VCF file
+  tabix -p vcf "${vcf_dir}/${sample}_norm.vcf.gz"
+
+  # Step 4: Generate the consensus sequence from the normalized VCF
+  bcftools consensus -f "$ref" "${vcf_dir}/${sample}_norm.vcf.gz" > "${vcf_dir}/${sample}_consensus.fasta"
+
+  echo "Consensus for $sample generated: ${vcf_dir}/${sample}_consensus.fasta"
 done
+
+echo "All samples processed."
 
 # Reapply group write permissions to the full directory (ensures output is accessible)
 chmod -R g+w ../*
