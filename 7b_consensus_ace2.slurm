@@ -21,7 +21,7 @@ module load bcftools/1.16
 # Define input/output paths and filenames
 vcf_dir="../cx_amplicon_vcf"                            # Directory to store per-sample VCF files
 out_dir="../cx_amplicon_consensus"                      # Directory to store consensus FASTA files
-ref="../cx_amplicon_bwa/ref/ace2_cqm1_coi.fasta"      # Reference FASTA file
+ref="../cx_amplicon_bwa/ref/ace2_cqm1_coi.fasta"        # Reference FASTA file
 region_file="../cx_amplicon_scripts/ref_list_ace2.txt"  # Text file with one region: e.g., ON563187.1:1-712
 gene="ace2"                                             # Target gene name for file labeling
 
@@ -44,10 +44,8 @@ for vcf in *.vcf.gz; do
 
   echo "Processing $sample..."
 
-  # Generate consensus sequence for the specific region
-  # --missing N masks low-coverage positions (./. in VCF) with Ns
-  samtools faidx "$ref" "$region" | \
-  bcftools consensus --missing N "${sample}.vcf.gz" | \
+  # Generate consensus, --missing N masks low-coverage positions (./. in VCF) with Ns
+  samtools faidx "$ref" "$region" | bcftools consensus --missing N "${sample}.vcf.gz" | \
   awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${out_dir}/${gene}/${sample}_${gene}_consensus.fa"
 done
 
