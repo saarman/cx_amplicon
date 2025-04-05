@@ -45,7 +45,7 @@ for vcf in *.vcf.gz; do
   echo "Processing $sample..."
 
   # Generate consensus, --missing N masks low-coverage positions (./. in VCF) with Ns
-  samtools faidx "$ref" "$region" | bcftools consensus "${sample}_norm.vcf.gz" | \
+  samtools faidx "$ref" "$region" | bcftools consensus --missing N "${sample}_norm.vcf.gz" | \
   awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${out_dir}/${gene}/${sample}_${gene}_consensus.fa"
 done
 
