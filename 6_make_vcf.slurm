@@ -58,8 +58,8 @@ for bam in *.bam; do
   bcftools call -mv -Oz -o "${vcf_dir}/${sample}.vcf.gz"
 
   # Step 2: Filter the VCF by minimum per-sample depth
-  bcftools filter -i "FORMAT/DP >= $min_depth" -Oz -o "${vcf_dir}/${sample}_filtered.vcf.gz" "${vcf_dir}/${sample}.vcf.gz"
-
+  bcftools view -i "DP>=$min_depth" "${vcf_dir}/${sample}.vcf.gz" -Oz -o "${vcf_dir}/${sample}_filtered.vcf.gz"
+  
   # Step 3: Normalize indels to ensure proper representation
   bcftools norm -f "$ref" "${vcf_dir}/${sample}_filtered.vcf.gz" -Oz -o "${vcf_dir}/${sample}_norm.vcf.gz"
 
