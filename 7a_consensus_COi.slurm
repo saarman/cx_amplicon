@@ -21,7 +21,7 @@ module load bcftools/1.16
 # Define input/output paths and filenames
 vcf_dir="../cx_amplicon_vcf"                          # Directory to store per-sample VCF files
 out_dir="../cx_amplicon_consensus"                    # Directory to store consensus FASTA files
-ref="../cx_amplicon_bwa/ref/ace2_cqm1_coi.fasta"    # Reference FASTA file with all COI sequences
+ref="../cx_amplicon_bwa/ref/ace2_cqm1_coi.fasta"      # Reference FASTA file with all COI sequences
 region_file="../cx_amplicon_scripts/ref_list_COi_consensus.txt" # Text file with one reference sequence name per line
 gene="coi"                                            # Target gene name for file labeling
 
@@ -32,6 +32,9 @@ mkdir -p "${out_dir}/${gene}"
 # Ensure group write permissions for all relevant directories
 chmod -R g+w ../*
 
+# Read the region of interest from the region file
+region=$(cat "$region_file")
+
 # Move into the VCF directory to simplify file handling
 cd "$vcf_dir"
 
@@ -41,21 +44,9 @@ for vcf in *.vcf.gz; do
 
   echo "Processing $sample..."
 
-  # Loop over each reference region (e.g., COI sequence name or region like SeqID:1-700)
-  while read -r region; do
-    clean_region=$(echo "$region" | sed 's/[:]/_/g')  # Sanitize region name for file naming
-
-    echo "  Generating consensus for region: $region..."
-
-    # Generate consensus sequence for the specific region
-    # --missing N masks low-coverage positions (./. in VCF) with Ns
-
-    samtools faidx "$ref" "$region" | \
-    bcftools consensus --missing N "${sample}.vcf.gz" | \
-    awk -v sample="$sample" -v region="$region" '/^>/{print ">"sample"|"region; next} {print}' > \
-    "${out_dir}/${gene}/${sample}_${gene}_${clean_region}_consensus.fa"
-
-  done < "$region_file"
+  # Generate consensus, --missing N masks low-coverage positions (./. in VCF) with Ns
+  samtools faidx "$ref" "$region" | bcftools consensus --missing N "${sample}_norm.vcf.gz" | \
+  awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${out_dir}/${gene}/${sample}_${gene}_consensus.fa"
 done
 
 # Combine all per-sample consensus FASTAs into one multi-FASTA file
