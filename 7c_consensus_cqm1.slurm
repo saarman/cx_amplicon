@@ -44,10 +44,8 @@ for vcf in *.vcf.gz; do
 
   echo "Processing $sample..."
 
-  # Generate consensus sequence for the specific region
-  # --missing N masks low-coverage positions (./. in VCF) with Ns
-  samtools faidx "$ref" "$region" | \
-  bcftools consensus --missing N "${sample}.vcf.gz" | \
+  # Generate consensus, --missing N masks low-coverage positions (./. in VCF) with Ns
+  samtools faidx "$ref" "$region" | bcftools consensus --missing N "${sample}_norm.vcf.gz" | \
   awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${out_dir}/${gene}/${sample}_${gene}_consensus.fa"
 done
 
@@ -56,4 +54,3 @@ cat ${out_dir}/${gene}/*.fa > ${out_dir}/all_${gene}_consensus.fa
 
 # Ensure group write permissions for all relevant directories
 chmod -R g+w ../*
-
