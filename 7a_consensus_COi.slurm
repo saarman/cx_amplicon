@@ -45,6 +45,8 @@ for vcf in *.vcf.gz; do
   echo "Processing $sample..."
 
   # Generate consensus, --missing N masks low-coverage positions (./. in VCF) with Ns and filters DP<10
+  #samtools faidx "$ref" "$region" | bcftools consensus --missing N "${sample}_norm.vcf.gz" | \
+  #awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${out_dir}/${gene}/${sample}_${gene}_consensus.fa"
   samtools faidx "$ref" "$region" | \
   bcftools view -i 'FMT/DP>=10' "${sample}_norm.vcf.gz" | \
   bcftools consensus --missing N | \
