@@ -39,8 +39,8 @@ region=$(cat "$region_file")
 cd "$vcf_dir"
 
 # Process each VCF file individually
-for vcf in *.vcf.gz; do
-  sample=$(basename "$vcf" .vcf.gz)  # Extract sample name by removing .vcf extension
+for vcf in *_norm.vcf.gz; do
+  sample=$(basename "$vcf" _norm.vcf.gz)  # Extract sample name by removing .vcf extension
 
   echo "Processing $sample..."
 
