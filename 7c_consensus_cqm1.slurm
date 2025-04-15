@@ -49,6 +49,18 @@ for vcf in *_norm.vcf.gz; do
   #awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${out_dir}/${gene}/${sample}_${gene}_consensus.fa"
   samtools faidx "$ref" "$region" | bcftools consensus --missing N "${sample}_norm.vcf.gz" | \
   awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${out_dir}/${gene}/${sample}_${gene}_consensus.fa"
+
+ # Haplotype A
+  samtools faidx "$ref" "$region" | \
+  bcftools consensus --missing N --haplotype A "${sample}_norm.vcf.gz" | \
+  awk -v sample="${sample}" -v hap="A" '/^>/{print ">"sample"|haplotype_"hap; next} {print}' > "${sample}_hapA.fa"
+
+  # Haplotype B
+  samtools faidx "$ref" "$region" | \
+  bcftools consensus --missing N --haplotype B "${sample}_norm.vcf.gz" | \
+  awk -v sample="${sample}" -v hap="B" '/^>/{print ">"sample"|haplotype_"hap; next} {print}' > "${sample}_hapB.fa"
+
+
 done
 
 # Combine all per-sample consensus FASTAs into one multi-FASTA file
