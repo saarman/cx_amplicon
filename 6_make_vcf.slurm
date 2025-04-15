@@ -26,7 +26,7 @@ module load htslib
 bam_dir="./../cx_amplicon_bwa"                     # Directory containing input BAM files
 vcf_dir="./../cx_amplicon_vcf"                     # Directory to store per-sample VCF files
 ref="../cx_amplicon_bwa/ref/ace2_cqm1_coi.fasta"   # Reference FASTA file
-min_depth=10                                       # Minimum depth for consensus
+min_depth=20                                       # Minimum depth for consensus
 
 # Ensure the output directory exists
 mkdir -p "$vcf_dir"
@@ -54,7 +54,7 @@ for bam in *.bam; do
   echo "Processing sample: $sample"
 
   # Step 1: Generate the VCF file with quality filtering using bcftools mpileup
-  bcftools mpileup -Ou -f "$ref" -q 30 -Q 20 -d 10000 "$bam" | \
+  bcftools mpileup -Ou -f "$ref" -q 30 -Q 30 -d 10000 "$bam" | \
   bcftools call -mv -Oz -o "${vcf_dir}/${sample}.vcf.gz"
 
   # Step 2: Filter the VCF by minimum per-sample depth
