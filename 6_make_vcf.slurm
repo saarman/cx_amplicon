@@ -65,7 +65,27 @@ for bam in *.bam; do
 
   # Step 4: Index the normalized VCF file
   tabix -p vcf "${vcf_dir}/${sample}_norm.vcf.gz"
+  
+  # Step 5: Call variants using FreeBayes (haplotype-aware)
+  echo "Calling variants for: $sample using FreeBayes"
+  freebayes -f "$ref" \
+      --ploidy 2 \
+      --min-base-quality 30 \
+      --min-mapping-quality 30 \
+      --min-coverage $min_depth \
+      --genotype-qualities \
+      "$bam" > "${phased_dir}/${sample}_phased.vcf" || { echo "Error calling variants with FreeBayes for $sample"; continue; }
 
+  # Check if the raw VCF file was created successfully
+  if [[ ! -s "${phased_dir}/${sample}_phased.vcf" ]]; then
+      echo "Error: Raw VCF file is empty for $sample"
+      continue
+  fi
+
+  # Compress and index the phased VCF file
+  echo "Compressing and indexing ace2_raw VCF: ${sample}_phased.vcf"
+  bgzip -c "${phased_dir}/${sample}_phased.vcf" > "${phased_dir}/${sample}_phased.vcf.gz" || { echo "Error compressing phased VCF for $sample"; continue; }
+  tabix -p vcf "${phased_dir}/${sample}_phased.vcf.gz" || { echo "Error indexing phased VCF for $sample"; continue; }
 done
 
 echo "All samples processed."
