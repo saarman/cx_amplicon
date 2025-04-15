@@ -15,6 +15,7 @@
 # #SBATCH --mail-type=FAIL
 
 # Load required software modules
+module load freebayes/1.3.4
 module load bwa/2020_03_19
 module load samtools/1.16
 module load bcftools/1.16
@@ -25,8 +26,9 @@ module load htslib
 # Define input/output paths and filenames
 bam_dir="./../cx_amplicon_bwa"                     # Directory containing input BAM files
 vcf_dir="./../cx_amplicon_vcf"                     # Directory to store per-sample VCF files
+phased_dir="./../cx_amplicon_phased"                  # Directory to store per-sample phased VCF files
 ref="../cx_amplicon_bwa/ref/ace2_cqm1_coi.fasta"   # Reference FASTA file
-min_depth=20                                       # Minimum depth for consensus
+min_depth=10                                       # Minimum depth for consensus
 
 # Ensure the output directory exists
 mkdir -p "$vcf_dir"
