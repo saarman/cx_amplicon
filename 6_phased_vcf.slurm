@@ -76,10 +76,10 @@ for bam in *.bam; do
       --min-mapping-quality 30 \
       --min-coverage $min_depth \
       --genotype-qualities \
-      "$bam" > "${phased_dir}/${sample}_phased.tmp" || { echo "Error calling variants with FreeBayes for $sample"; continue; }
+      "$bam" > "${phased_dir}/${sample}_phased.vcf" || { echo "Error calling variants with FreeBayes for $sample"; continue; }
 
     # Check if the raw VCF file was created successfully
-    if [[ ! -s "${phased_dir}/${sample}_phased.tmp" ]]; then
+    if [[ ! -s "${phased_dir}/${sample}_phased.vcf" ]]; then
         echo "Error: Raw VCF file is empty for $sample"
         continue
     fi
