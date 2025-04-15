@@ -20,7 +20,7 @@ module load bcftools/1.16
 
 # Define input/output paths and filenames
 vcf_dir="../cx_amplicon_vcf"                            # Directory to store per-sample VCF files
-phased_dir="./../cx_amplicon_phased"                    # Directory to store per-sample phased VCF files
+phased_dir="../cx_amplicon_phased"                      # Directory to store per-sample phased VCF files
 out_dir="../cx_amplicon_consensus"                      # Directory to store consensus FASTA files
 ref="../cx_amplicon_bwa/ref/ace2_cqm1_coi.fasta"      # Reference FASTA file
 region_file="../cx_amplicon_scripts/ref_list_cqm1.txt"  # Text file with one region: e.g., ON563187.1:1-712
@@ -53,12 +53,12 @@ for vcf in *_norm.vcf.gz; do
 
  # Haplotype A
   samtools faidx "$ref" "$region" | \
-  bcftools consensus --missing N --haplotype A "${sample}_norm.vcf.gz" | \
+  bcftools consensus --missing N --haplotype A "${phased_dir}/${sample}_phased.vcf.gz" | \
   awk -v sample="${sample}" -v hap="A" '/^>/{print ">"sample"|haplotype_"hap; next} {print}' > "${sample}_hapA.fa"
 
   # Haplotype B
   samtools faidx "$ref" "$region" | \
-  bcftools consensus --missing N --haplotype B "${sample}_norm.vcf.gz" | \
+  bcftools consensus --missing N --haplotype B "${phased_dir}/${sample}_phased.vcf.gz" | \
   awk -v sample="${sample}" -v hap="B" '/^>/{print ">"sample"|haplotype_"hap; next} {print}' > "${sample}_hapB.fa"
 done
 
