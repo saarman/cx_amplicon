@@ -15,6 +15,7 @@
 # #SBATCH --mail-type=FAIL
 
 # Load required software modules
+module load freebayes/1.3.4
 module load bwa/2020_03_19
 module load samtools/1.16
 module load bcftools/1.16
@@ -25,11 +26,13 @@ module load htslib
 # Define input/output paths and filenames
 bam_dir="./../cx_amplicon_bwa"                     # Directory containing input BAM files
 vcf_dir="./../cx_amplicon_vcf"                     # Directory to store per-sample VCF files
+phased_dir="./../cx_amplicon_phased"                  # Directory to store per-sample phased VCF files
 ref="../cx_amplicon_bwa/ref/ace2_cqm1_coi.fasta"   # Reference FASTA file
 min_depth=10                                       # Minimum depth for consensus
 
 # Ensure the output directory exists
 mkdir -p "$vcf_dir"
+mkdir -p "$phased_dir"
 
 # Index the reference FASTA if not already indexed (creates .fai file)
 if [ ! -f "${ref}.fai" ]; then
@@ -46,15 +49,14 @@ cd "$bam_dir"
 for bam in *.bam; do
   sample=$(basename "$bam" .bam)  # Get sample name by stripping the .bam extension
 
-  # Index the BAM file if the index doesn't already exist
-  if [ ! -f "${bam}.bai" ] && [ ! -f "${sample}.bai" ]; then
-    samtools index "$bam"
-  fi
+  # Always reindex the BAM file to ensure accuracy
+  echo "Reindexing BAM file: $bam"
+  samtools index "$bam" || { echo "Error indexing BAM file: $bam"; continue; }
 
   echo "Processing sample: $sample"
 
   # Step 1: Generate the VCF file with quality filtering using bcftools mpileup
-  bcftools mpileup -Ou -f "$ref" -q 30 -Q 20 -d 10000 "$bam" | \
+  bcftools mpileup -Ou -f "$ref" -q 30 -Q 30 -d 10000 "$bam" | \
   bcftools call -mv -Oz -o "${vcf_dir}/${sample}.vcf.gz"
 
   # Step 2: Filter the VCF by minimum per-sample depth
@@ -65,6 +67,27 @@ for bam in *.bam; do
 
   # Step 4: Index the normalized VCF file
   tabix -p vcf "${vcf_dir}/${sample}_norm.vcf.gz"
+
+  # Step 5: Call variants using FreeBayes (haplotype-aware)
+  echo "Calling variants for: $sample using FreeBayes"
+  freebayes -f "$ref" \
+      --ploidy 2 \
+      --min-base-quality 30 \
+      --min-mapping-quality 30 \
+      --min-coverage $min_depth \
+      --genotype-qualities \
+      "$bam" > "${phased_dir}/${sample}_phased.tmp" || { echo "Error calling variants with FreeBayes for $sample"; continue; }
+
+    # Check if the raw VCF file was created successfully
+    if [[ ! -s "${phased_dir}/${sample}_phased.tmp" ]]; then
+        echo "Error: Raw VCF file is empty for $sample"
+        continue
+    fi
+
+    # Compress and index the phased VCF file
+    echo "Compressing and indexing ace2_raw VCF: ${sample}_phased.vcf"
+    bgzip -c "${phased_dir}/${sample}_phased.vcf" > "${phased_dir}/${sample}_phased.vcf.gz" || { echo "Error compressing phased VCF for $sample"; continue; }
+    tabix -p vcf "${phased_dir}/${sample}_phased.vcf.gz" || { echo "Error indexing phased VCF for $sample"; continue; }
 
 done
 
