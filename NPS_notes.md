@@ -83,9 +83,9 @@ Mosquito: allow for gap opening, especially for cqm1
 ```
 gnuplot -persist <<EOF
 set terminal dumb size 120,30
-set title "Mean Depth: All genes"
-set xlabel "Position"
+set title "Mean Read Depth"
+set xlabel "Postition"
 set ylabel "Depth"
-plot "B393-UT-M07101-240702_S121_L001.depth.txt" using 2:3 with lines title "Mean Depth"
+plot "mean_depth_per_position.tsv" using 0:3 with lines notitle
 EOF
 ```
