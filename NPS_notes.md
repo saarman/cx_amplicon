@@ -86,6 +86,14 @@ set terminal dumb size 120,30
 set title "Mean Read Depth"
 set xlabel "Postition"
 set ylabel "Depth"
-plot "mean_depth_per_position.tsv" using 0:3 with lines notitle
+plot "B109-UT-M70330-240718_S113_L001.depth.txt" using 0:3 with lines notitle
+EOF
+
+gnuplot -persist <<EOF
+set terminal dumb size 120,30
+set title "Mean Read Depth"
+set xlabel "Postition"
+set ylabel "Depth"
+plot "B503-UT-M07101-240702_S187_L001.depth.txt" using 0:3 with lines notitle
 EOF
 ```
