@@ -82,6 +82,7 @@ Mosquito: allow for gap opening, especially for cqm1
 ## Check depth for a single individual, focus on quinx genotypes for Ace2
 ```
 for file in \
+B504-UT-M07101-240702_S188_L001.depth.txt \
 B053-UT-M07101-240702_S28_L001.depth.txt \
 B372-UT-M07101-240702_S105_L001.depth.txt \
 B373-UT-M07101-240702_S106_L001.depth.txt \
@@ -101,10 +102,10 @@ B392-UT-M70330-240718_S171_L001.depth.txt
 do
   gnuplot -persist <<EOF
   set terminal dumb size 120,30
-  set title "Read Depth: ${file}"
+  set title "Read Depth (capped at 20×): ${file}"
   set xlabel "Position (line order)"
   set ylabel "Depth"
-  set yrange [0:10]
+  set yrange [0:20]
   plot "${file}" using 0:3 with lines notitle
 EOF
 
