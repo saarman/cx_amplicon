@@ -177,6 +177,16 @@ sbatch 2_multiqc_summary.slurm                                                  
 ```  
 # Look at depth stats
 
+Commands to see depth across all 3 reference sequences: cqm1, ace2, COi
+```
+gnuplot -persist <<EOF
+set terminal dumb size 120,30
+set title "Mead Read Depth"
+set xlabel "Position"
+set ylabel "Depth"
+plot "mean_depth_per_position.tsv" using 0:3 with lines notitle
+EOF
+```
 Commands for cqm1:
 ```
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_NS/
