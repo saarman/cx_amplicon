@@ -177,8 +177,11 @@ sbatch 2_multiqc_summary.slurm                                                  
 ```  
 # Look at depth stats
 
-Commands to see depth across all 3 reference sequences: cqm1, ace2, COi
+Commands for mean depth across all 3 reference sequences: cqm1, ace2, COi
 ```
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_NS/
+cd ./cx_amplicon_bwa/depth
+
 gnuplot -persist <<EOF
 set terminal dumb size 120,30
 set title "Mead Read Depth"
@@ -186,6 +189,37 @@ set xlabel "Position"
 set ylabel "Depth"
 plot "mean_depth_per_position.tsv" using 0:3 with lines notitle
 EOF
+```
+Output mean depth for all 3 genes:
+```
+                                                         Mead Read Depth                                                
+                                                                                                                        
+       35000 +------------------------------------------------------------------------------------------------------+   
+             |          +           +          +           +          +           +          +           +          |   
+             |                                                **                                                    |   
+       30000 |-+                                             ****                                                 +-|   
+             |                                              ******                                                  |   
+             |                                              **  ***                                                 |   
+             |                                              *    **                                                 |   
+       25000 |-+                                            *    ***                                              +-|   
+             |                             **               *    ***                                                |   
+             |                           *****             *     * *                                                |   
+       20000 |-+                      ** **  **           **     * **                                             +-|   
+             |                        ****    ****        *      *  *                                               |   
+             |                       ** *        *        *      *  **                                              |   
+       15000 |-+                     *  *        **       *      *   *                                            +-|   
+             |                      **            *      **      *   *                                              |   
+             |                      *             **     *       *   **                                             |   
+       10000 |-+                   **              *     *       *    *                                           +-|   
+             |                    **               *    **            *                                             |   
+             |                    *                **   *             *                                             |   
+             |                    *                 **  *             **          ***                               |   
+        5000 |-+                  *                  *  *              *    **********                            +-|   
+             |                   **                  *  *              *   **        *                              |   
+             |          +        *  +          +     ****  +          +* ***      +  ***     +           +          |   
+           0 +------------------------------------------------------------------------------------------------------+   
+             0         500         1000       1500        2000       2500        3000       3500        4000       4500 
+                                                            Position                                                   
 ```
 Commands for cqm1:
 ```
