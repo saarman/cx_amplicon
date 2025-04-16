@@ -184,7 +184,7 @@ cd ./cx_amplicon_bwa/depth
 
 gnuplot -persist <<EOF
 set terminal dumb size 120,30
-set title "Mead Read Depth"
+set title "Mean Read Depth: cqm1, ace2, coi"
 set xlabel "Position"
 set ylabel "Depth"
 plot "mean_depth_per_position.tsv" using 0:3 with lines notitle
