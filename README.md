@@ -180,7 +180,7 @@ sbatch 2_multiqc_summary.slurm                                                  
 Commands for cqm1:
 ```
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_NS/
-cd ../cx_amplicon_bwa/depth
+cd ./cx_amplicon_bwa/depth
 awk '$1 == "KY929304.1" && $2 >= 880 && $2 <= 1834' mean_depth_per_position.tsv > mean_depth_KY929304.1_880-1834.tsv
 
 gnuplot -persist <<EOF
@@ -227,7 +227,7 @@ Output for cqm1:
 Commands for ace2:
 ```
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_NS/
-cd ../cx_amplicon_bwa/depth
+cd ./cx_amplicon_bwa/depth
 awk '$1 == "ON563187.1" && $2 >= 1 && $2 <= 712' mean_depth_per_position.tsv > mean_depth_ON563187.1_1-712.tsv
 
 gnuplot -persist <<EOF
@@ -269,6 +269,52 @@ Output for ace2:
            0 +------------------------------------------------------------------------------------------------------+   
              0           100          200          300          400         500          600          700          800                                                          Position                                                    
 ```
+Commands for COi:
+```
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_NS/
+cd ./cx_amplicon_bwa/depth
 
+# Filter region EMBOSS0001:30–724
+awk '$1 == "EMBOSS0001" && $2 >= 30 && $2 <= 724' mean_depth_per_position.tsv > mean_depth_EMBOSS0001_30-724.tsv
 
-
+# Terminal plot with gnuplot
+gnuplot -persist <<EOF
+set terminal dumb size 120,30
+set title "Mean Depth: EMBOSS0001 (30–724)"
+set xlabel "Position"
+set ylabel "Depth"
+plot "mean_depth_EMBOSS0001_30-724.tsv" using 2:3 with lines title "Mean Depth"
+EOF
+```
+Output for COi:
+```
+                                                                                                                        
+                                                 Mean Depth: EMBOSS0001 (30–724)                                        
+                                                                                                                        
+       7000 +-------------------------------------------------------------------------------------------------------+   
+            |            +            +            +            +            +            +            +            |   
+            |                                                                                    Mean Depth ******* |   
+       6000 |-+                                                       **                                          +-|   
+            |                                                         *****   **                                    |   
+            |                                                        *  * **  *****                                 |   
+            |                                                   ******     ****   **                                |   
+       5000 |-+                                       *        **                  **                             +-|   
+            |                                  ** ********* ****                    **                              |   
+            |                                 ** **    ** *** *                      *                              |   
+       4000 |-+                        ********            **                         *                           +-|   
+            |                      *****                                              **                            |   
+            |                    ***                                                   *                            |   
+       3000 |-+                ***                                                     *                          +-|   
+            |                  *                                                       **                           |   
+            |                 *                                                         *                           |   
+       2000 |-+            ****                                                         ****                      +-|   
+            |            ***                                                               ********                 |   
+            |           **                                                                         ***              |   
+            |         ***                                                                            **             |   
+       1000 |-+    ****                                                                               *           +-|   
+            |     **                                                                                  **            |   
+            |   ***      +            +            +            +            +            +            ***          |   
+          0 +-------------------------------------------------------------------------------------------------------+   
+            0           100          200          300          400          500          600          700          800  
+                                                            Position                                                    
+```
