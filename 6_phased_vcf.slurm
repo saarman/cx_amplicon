@@ -56,7 +56,9 @@ for bam in *.bam; do
   echo "Processing sample: $sample"
 
   # Step 1: Generate the VCF file with quality filtering using bcftools mpileup
-  bcftools mpileup -Ou -f "$ref" -q 30 -Q 30 -d 10000 -a FORMAT/DP "$bam" | \
+  #includes sites with zero coverage, marked with no genotype (./.) and missing depth
+  bcftools mpileup -Ou -f "$ref" -q 30 -Q 30 -d 10000 -a FORMAT/DP,INFO/AD \
+  --include '1' "$bam" | \ 
   bcftools call -c -Oz -o "${vcf_dir}/${sample}.vcf.gz"
 
   # ANOTHER OPTION:
