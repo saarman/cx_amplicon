@@ -81,19 +81,33 @@ Mosquito: allow for gap opening, especially for cqm1
 
 ## Check depth for a single individual
 ```
-gnuplot -persist <<EOF
-set terminal dumb size 120,30
-set title "Mean Read Depth"
-set xlabel "Postition"
-set ylabel "Depth"
-plot "B109-UT-M70330-240718_S113_L001.depth.txt" using 0:3 with lines notitle
+for file in \
+B053-UT-M07101-240702_S28_L001.depth.txt \
+B372-UT-M07101-240702_S105_L001.depth.txt \
+B373-UT-M07101-240702_S106_L001.depth.txt \
+B374-UT-M07101-240702_S107_L001.depth.txt \
+B377-UT-M07101-240702_S108_L001.depth.txt \
+B378-UT-M07101-240702_S109_L001.depth.txt \
+B379-UT-M07101-240702_S110_L001.depth.txt \
+B380-UT-M07101-240702_S111_L001.depth.txt \
+B381-UT-M07101-240702_S112_L001.depth.txt \
+B393-UT-M70330-240718_S172_L001.depth.txt \
+B503-UT-M07101-240702_S187_L001.depth.txt \
+B109-UT-M70330-240718_S113_L001.depth.txt \
+B263-UT-M70330-240718_S140_L001.depth.txt \
+B292-UT-M70330-240718_S154_L001.depth.txt \
+B302-UT-M70330-240718_S158_L001.depth.txt \
+B392-UT-M70330-240718_S171_L001.depth.txt
+do
+  gnuplot -persist <<EOF
+  set terminal dumb size 120,30
+  set title "Read Depth: ${file}"
+  set xlabel "Position (line order)"
+  set ylabel "Depth"
+  plot "${file}" using 0:3 with lines notitle
 EOF
 
-gnuplot -persist <<EOF
-set terminal dumb size 120,30
-set title "Mean Read Depth"
-set xlabel "Postition"
-set ylabel "Depth"
-plot "B503-UT-M07101-240702_S187_L001.depth.txt" using 0:3 with lines notitle
-EOF
+  echo "Press enter to continue to the next file..."
+  read
+done
 ```
