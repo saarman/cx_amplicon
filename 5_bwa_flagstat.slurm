@@ -18,8 +18,12 @@
 module load bwa/2020_03_19
 module load samtools/1.16
 
-# Replace these variables with the actual paths and filenames
+# Define directories
 bam_dir="./../cx_amplicon_bwa"
+depth_dir="${bam_dir}/depth"
+
+# Create depth output directory if it doesn't exist
+mkdir -p "$depth_dir"
 
 # Output spreadsheet file
 output_spreadsheet="flagstat_results.tsv"
@@ -41,4 +45,46 @@ for bam_file in "$bam_dir"/*.bam; do
 
     # Append the results to the spreadsheet
     echo -e "$sample_name\t$total_reads\t$mapped_reads" >> "$output_spreadsheet"
+
+    # --- depth output ---
+    samtools depth -a "$bam_file" > "${depth_dir}/${sample_name}.depth.txt"
 done
+
+# After the loop: Compute mean depth per position across all samples
+echo "Computing mean depth per position..."
+
+# Create a combined file: chrom, pos, mean_depth
+# Assumes all depth files are in same 3-column format: CHROM POS DEPTH
+
+cd "$depth_dir"
+
+# Use paste to align all depths by position
+# First extract positions from the first file
+first_file=$(ls *.depth.txt | head -n 1)
+cut -f1,2 "$first_file" > all_positions.txt
+
+# Add all depth columns to a temporary matrix
+for f in *.depth.txt; do
+    cut -f3 "$f" > "onlydepth_${f}"
+done
+
+# Combine all depths side-by-side
+paste all_positions.txt onlydepth_*.depth.txt > depth_matrix.tsv
+
+# Calculate mean depth per position
+awk '{
+    sum=0; count=0;
+    for(i=3; i<=NF; i++) {
+        if ($i != "NA" && $i != ".") {
+            sum+=$i; count++;
+        }
+    }
+    mean = (count > 0) ? sum/count : "NA";
+    print $1, $2, mean
+}' depth_matrix.tsv > mean_depth_per_position.tsv
+
+# Clean up
+rm onlydepth_*.depth.txt all_positions.txt depth_matrix.tsv
+
+echo "Mean depth written to: $depth_dir/mean_depth_per_position.tsv"
+
