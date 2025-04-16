@@ -56,8 +56,11 @@ for bam in *.bam; do
   echo "Processing sample: $sample"
 
   # Step 1: Generate the VCF file with quality filtering using bcftools mpileup
-  bcftools mpileup -Ou -f "$ref" -q 30 -Q 30 -d 10000 "$bam" | \
-  bcftools call -mv -Oz -o "${vcf_dir}/${sample}.vcf.gz"
+  bcftools mpileup -Ou -f "$ref" -q 30 -Q 30 -d 10000 -a FORMAT/DP "$bam" | \
+  bcftools call -c -Oz -o "${vcf_dir}/${sample}.vcf.gz"
+
+  # ANOTHER OPTION:
+  # bcftools call -mv -Oz -o "${vcf_dir}/${sample}.vcf.gz" --output-type z --output "${vcf_dir}/${sample}.vcf.gz" --ploidy 2 --keep-alts --variants-only 0
 
   # Step 2: Filter the VCF by minimum per-sample depth
   bcftools view -i "DP>=$min_depth" "${vcf_dir}/${sample}.vcf.gz" -Oz -o "${vcf_dir}/${sample}_filtered.vcf.gz"
@@ -71,12 +74,14 @@ for bam in *.bam; do
   # Step 5: Call variants using FreeBayes (haplotype-aware)
   echo "Calling variants for: $sample using FreeBayes"
   freebayes -f "$ref" \
-      --ploidy 2 \
-      --min-base-quality 30 \
-      --min-mapping-quality 30 \
-      --min-coverage $min_depth \
-      --genotype-qualities \
-      "$bam" > "${phased_dir}/${sample}_phased.vcf" || { echo "Error calling variants with FreeBayes for $sample"; continue; }
+    --ploidy 2 \
+    --min-base-quality 30 \
+    --min-mapping-quality 30 \
+    --min-coverage $min_depth \
+    --genotype-qualities \
+    --report-monomorphic \
+    --report-all-haplotype-alleles \
+    "$bam" > "${phased_dir}/${sample}_phased.vcf" || { echo "Error calling variants with FreeBayes for $sample"; continue; }
 
   # Check if the raw VCF file was created successfully
   if [[ ! -s "${phased_dir}/${sample}_phased.vcf" ]]; then
