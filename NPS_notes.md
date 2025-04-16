@@ -79,7 +79,7 @@ Separate pipelines for COI from mosquito genes, from step 3 on.
 COI: use a consensus for vertebrates as the single reference, and use extremely lenient settings
 Mosquito: allow for gap opening, especially for cqm1 
 
-## Check depth for a single individual
+## Check depth for a single individual, focus on quinx genotypes for Ace2
 ```
 for file in \
 B053-UT-M07101-240702_S28_L001.depth.txt \
@@ -104,6 +104,7 @@ do
   set title "Read Depth: ${file}"
   set xlabel "Position (line order)"
   set ylabel "Depth"
+  set yrange [0:10]
   plot "${file}" using 0:3 with lines notitle
 EOF
 
