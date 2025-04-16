@@ -80,12 +80,12 @@ COI: use a consensus for vertebrates as the single reference, and use extremely 
 Mosquito: allow for gap opening, especially for cqm1 
 
 ## Check depth for a single individual
-
+```
 gnuplot -persist <<EOF
 set terminal dumb size 120,30
 set title "Mean Depth: All genes"
 set xlabel "Position"
 set ylabel "Depth"
-plot "Colony11-UT-M70330-240718_S95_L001.depth.txt" using 2:3 with lines title "Mean Depth"
+plot "B393-UT-M07101-240702_S121_L001.depth.txt" using 2:3 with lines title "Mean Depth"
 EOF
-
+```
