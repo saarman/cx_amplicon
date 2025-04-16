@@ -78,3 +78,14 @@ samtools faidx "$ref" ON563187.1:1-712
 Separate pipelines for COI from mosquito genes, from step 3 on.
 COI: use a consensus for vertebrates as the single reference, and use extremely lenient settings
 Mosquito: allow for gap opening, especially for cqm1 
+
+## Check depth for a single individual
+
+gnuplot -persist <<EOF
+set terminal dumb size 120,30
+set title "Mean Depth: All genes"
+set xlabel "Position"
+set ylabel "Depth"
+plot "Colony11-UT-M70330-240718_S95_L001.depth.txt" using 2:3 with lines title "Mean Depth"
+EOF
+
