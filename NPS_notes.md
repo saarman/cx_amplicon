@@ -113,3 +113,10 @@ EOF
   read
 done
 ```
+By default, vcftools removes genotypes (entire positions) that don’t pass filters like --minDP. This leads to:
+
+Sites absent from the filtered VCF entirely.
+
+Which bcftools consensus interprets as: “use the reference base.”
+
+So you end up with a consensus that looks complete but isn't accurately masked — especially when there's no data at those sites.
