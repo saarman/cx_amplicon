@@ -48,17 +48,19 @@ for vcf in *_norm.vcf.gz; do
   # Generate consensus, --missing N masks low-coverage positions (./. in VCF) with Ns 
   #bcftools view -i 'DP>=10' "${sample}_norm.vcf.gz"        # gave up extra filter, should aready be done in step 6
   #awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${out_dir}/${gene}/${sample}_${gene}_consensus.fa"
-  samtools faidx "$ref" "$region" | bcftools consensus --missing N "${sample}_norm.vcf.gz" | \
+  bcftools view -r "$region" -i 'FMT/DP>0' "${sample}_norm.vcf.gz" | \
+  bcftools consensus --missing N -f "$ref" | \
   awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${out_dir}/${gene}/${sample}_${gene}_consensus.fa"
 
  # Haplotype A
-  samtools faidx "$ref" "$region" | \
-  bcftools consensus --missing N --haplotype A "${phased_dir}/${sample}_phased.vcf.gz" | \
-  awk -v sample="${sample}" -v hap="A" '/^>/{print ">"sample"|haplotype_"hap; next} {print}' > "${out_dir}/${gene}/${sample}_hapA.fa"
+  bcftools view -r "$region" -i 'FMT/DP>0' "${phased_dir}/${sample}_phased.vcf.gz" | \
+  bcftools consensus --missing N --haplotype A -f "$ref" | \
+  awk -v sample="${sample}" -v hap="A" '/^>/{print ">"sample"|haplotype_"hap; next} {print}' \
+  > "${out_dir}/${gene}/${sample}_hapA.fa"
 
   # Haplotype B
-  samtools faidx "$ref" "$region" | \
-  bcftools consensus --missing N --haplotype B "${phased_dir}/${sample}_phased.vcf.gz" | \
+  bcftools view -r "$region" -i 'FMT/DP>0' "${phased_dir}/${sample}_phased.vcf.gz" | \
+  bcftools consensus --missing N --haplotype B -f "$ref" | \
   awk -v sample="${sample}" -v hap="B" '/^>/{print ">"sample"|haplotype_"hap; next} {print}' > "${out_dir}/${gene}/${sample}_hapB.fa"
 done
 
