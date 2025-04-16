@@ -176,8 +176,8 @@ git pull                                                                        
 sbatch 2_multiqc_summary.slurm                                                           # run example for step 2
 ```  
 # Look at depth stats
-Commands:
 
+Commands for cqm1:
 ```
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/cx_amplicon_NS/
 cd ../cx_amplicon_bwa/depth
@@ -191,7 +191,7 @@ set ylabel "Depth"
 plot "mean_depth_KY929304.1_880-1834.tsv" using 2:3 with lines title "Mean Depth"
 EOF
 ```
-Output:
+Output for cqm1:
 ```
 
                                                                                                                         
