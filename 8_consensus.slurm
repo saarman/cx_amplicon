@@ -17,6 +17,7 @@
 # Load required software modules
 module load samtools/1.16
 module load bcftools/1.16
+module load htslib
 
 # Define input/output paths and filenames
 vcf_dir="../cx_amplicon_vcf"            # Directory containing per-sample VCF files
