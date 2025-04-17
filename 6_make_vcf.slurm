@@ -56,7 +56,7 @@ for bam in *.bam; do
   bcftools call -m --ploidy 2 -Ou | \
   bcftools +setGT -Ou -- -t 'FMT/DP<2' -n . | \
   bcftools norm -f "$ref" -Ou | \
-  bcftools view -Oz -o "${vcf_dir}/${sample}.vcf.gz"
+  bcftools view --include 'FMT/DP>=2 || GT="./."' -Oz -o "${vcf_dir}/${sample}.vcf.gz"
 
   # CHECK: Are we creating correct (./.) with no data? Use this...
   # bcftools query -f '%GT\n' ../cx_amplicon_vcf/*_L001.vcf.gz | grep '\./\.'  
