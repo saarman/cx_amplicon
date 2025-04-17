@@ -24,18 +24,19 @@ phased_dir="../cx_amplicon_phased"                      # Directory to store per
 out_dir="../cx_amplicon_consensus"                      # Directory to store consensus FASTA files
 ref="../cx_amplicon_bwa/ref/ace2_cqm1_coi.fasta"        # Reference FASTA file
 
-# Create output directories if they don't exist
-mkdir -p "$out_dir"
-mkdir -p "${out_dir}/${gene}"
-
-# Ensure group write permissions for all relevant directories
-chmod -R g+w ../*
 
 # Move into the VCF directory to simplify file handling
 cd "$vcf_dir"
 
 for gene in cqm1 ace2 COi; do
-  
+  # Create output directories if they don't exist
+  mkdir -p "$out_dir"
+  mkdir -p "${out_dir}/${gene}"
+
+  # Ensure group write permissions for all relevant directories
+  chmod -R g+w ../*
+
+  # Define region
   region_file="ref_list_${gene}.txt"
   region=$(cat "$region_file")
 
