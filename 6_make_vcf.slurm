@@ -52,20 +52,20 @@ for bam in *.bam; do
 
   # Step 1: Generate the VCF file with quality filtering using bcftools mpileup
   # includes sites with zero coverage, marked with no genotype (./.) and missing depth
-  bcftools mpileup -Ou -f "$ref" -q 30 -Q 30 -d 10000 -a FORMAT/DP --include '1' "$bam" | \
+  bcftools mpileup -Ou -f "$ref" -q 30 -Q 30 -d 10000 -a FORMAT/DP "$bam" | \
   bcftools call -m --ploidy 2 -Ou | \
-  bcftools +setGT -Ou -- -t 'FMT/DP<2' -n . | \
+  bcftools +setGT -Ou -- -t 'FMT/DP<10' -n . | \
   bcftools norm -f "$ref" -Ou | \
-  bcftools view --include 'FMT/DP>=2 || GT="./."' -Oz -o "${vcf_dir}/${sample}.vcf.gz"
+  bcftools view -i 'FMT/DP>=10 || GT="./."' -Oz -o "${vcf_dir}/${sample}.vcf.gz"
+
+  # Step 2: Index the VCF file, forcing overwrite
+  tabix -p vcf "${vcf_dir}/${sample}.vcf.gz" -f
 
   # CHECK: Are we creating correct (./.) with no data? Use this...
   # bcftools query -f '%GT\n' ../cx_amplicon_vcf/*_L001.vcf.gz | grep '\./\.'  
   # bcftools query -f '%GT\n' ../cx_amplicon_vcf/*_norm.vcf.gz | grep '\./\.'
-
-  # Step 2: Index the VCF file
-  tabix -p vcf "${vcf_dir}/${sample}.vcf.gz"
   
-  # Step 3: Call variants using FreeBayes (haplotype-aware)
+  # Future Improvement: Call variants using FreeBayes (haplotype-aware)
   # SKIP (FOR NOW), THE REPORT ALL HAPLOTYPES IS NOT WORKING
   # MAYBE CAN USE FREEBAYES AFTER THE VCF FILE IS ALREADY CREATED?
   # MAYBE SHOULD USE A DIFFERENT PHASING SOFTWARE
