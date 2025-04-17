@@ -28,7 +28,6 @@ bam_dir="./../cx_amplicon_bwa"                     # Directory containing input 
 vcf_dir="./../cx_amplicon_vcf"                     # Directory to store per-sample VCF files
 phased_dir="./../cx_amplicon_phased"                  # Directory to store per-sample phased VCF files
 ref="../cx_amplicon_bwa/ref/ace2_cqm1_coi.fasta"   # Reference FASTA file
-min_depth=10                                       # Minimum depth for consensus
 
 # Ensure the output directory exists
 mkdir -p "$vcf_dir"
@@ -56,45 +55,50 @@ for bam in *.bam; do
   echo "Processing sample: $sample"
 
   # Step 1: Generate the VCF file with quality filtering using bcftools mpileup
-  #includes sites with zero coverage, marked with no genotype (./.) and missing depth
+  # includes sites with zero coverage, marked with no genotype (./.) and missing depth
   bcftools mpileup -Ou -f "$ref" -q 30 -Q 30 -d 10000 -a FORMAT/DP,INFO/AD \
   --include '1' "$bam" | \ 
   bcftools call -c -Oz -o "${vcf_dir}/${sample}.vcf.gz"
-
+  
   # ANOTHER OPTION:
   # bcftools call -mv -Oz -o "${vcf_dir}/${sample}.vcf.gz" --output-type z --output "${vcf_dir}/${sample}.vcf.gz" --ploidy 2 --keep-alts --variants-only 0
 
   # Step 2: Filter the VCF by minimum per-sample depth
-  bcftools view -i "DP>=$min_depth" "${vcf_dir}/${sample}.vcf.gz" -Oz -o "${vcf_dir}/${sample}_filtered.vcf.gz"
+  # SKIP!!! This filters out positions with ./. genotypes, which prevents bcftools consensus from inserting Ns at those positions... 
+  # ... defeating the purpose of --missing N in next script
+  # bcftools view -i "DP>=$min_depth" "${vcf_dir}/${sample}.vcf.gz" -Oz -o "${vcf_dir}/${sample}_filtered.vcf.gz"
   
   # Step 3: Normalize indels to ensure proper representation
-  bcftools norm -f "$ref" "${vcf_dir}/${sample}_filtered.vcf.gz" -Oz -o "${vcf_dir}/${sample}_norm.vcf.gz"
+  bcftools norm -f "$ref" "${vcf_dir}/${sample}.vcf.gz" -Oz -o "${vcf_dir}/${sample}_norm.vcf.gz"
 
   # Step 4: Index the normalized VCF file
   tabix -p vcf "${vcf_dir}/${sample}_norm.vcf.gz"
   
   # Step 5: Call variants using FreeBayes (haplotype-aware)
-  echo "Calling variants for: $sample using FreeBayes"
-  freebayes -f "$ref" \
-    --ploidy 2 \
-    --min-base-quality 30 \
-    --min-mapping-quality 30 \
-    --min-coverage $min_depth \
-    --genotype-qualities \
-    --report-monomorphic \
-    --report-all-haplotype-alleles \
-    "$bam" > "${phased_dir}/${sample}_phased.vcf" || { echo "Error calling variants with FreeBayes for $sample"; continue; }
-
+  # SKIP (FOR NOW), THE REPORT ALL HAPLOTYPES IS NOT WORKING
+  # MAYBE CAN USE FREEBAYES AFTER THE VCF FILE IS ALREADY CREATED?
+  # MAYBE SHOULD USE A DIFFERENT PHASING SOFTWARE
+  #echo "Calling variants for: $sample using FreeBayes"
+  #freebayes -f "$ref" \
+  # --ploidy 2 \
+  # --min-base-quality 30 \
+  # --min-mapping-quality 30 \
+  # --min-coverage $min_depth \
+  # --genotype-qualities \
+  # --report-monomorphic \
+  # --report-all-haplotype-alleles \
+  # "$bam" > "${phased_dir}/${sample}_phased.vcf" || { echo "Error calling variants with FreeBayes for $sample"; continue; }
+  #
   # Check if the raw VCF file was created successfully
-  if [[ ! -s "${phased_dir}/${sample}_phased.vcf" ]]; then
-      echo "Error: Raw VCF file is empty for $sample"
-      continue
-  fi
-
+  #if [[ ! -s "${phased_dir}/${sample}_phased.vcf" ]]; then
+  #   echo "Error: Raw VCF file is empty for $sample"
+  #   continue
+  #fi
+  #
   # Compress and index the phased VCF file
-  echo "Compressing and indexing ace2_raw VCF: ${sample}_phased.vcf"
-  bgzip -c "${phased_dir}/${sample}_phased.vcf" > "${phased_dir}/${sample}_phased.vcf.gz" || { echo "Error compressing phased VCF for $sample"; continue; }
-  tabix -p vcf "${phased_dir}/${sample}_phased.vcf.gz" || { echo "Error indexing phased VCF for $sample"; continue; }
+  #echo "Compressing and indexing phased VCF: ${sample}_phased.vcf"
+  #bgzip -c "${phased_dir}/${sample}_phased.vcf" > "${phased_dir}/${sample}_phased.vcf.gz" || { echo "Error compressing phased VCF for $sample"; continue; }
+  #tabix -p vcf "${phased_dir}/${sample}_phased.vcf.gz" || { echo "Error indexing phased VCF for $sample"; continue; }
 done
 
 echo "All samples processed."
