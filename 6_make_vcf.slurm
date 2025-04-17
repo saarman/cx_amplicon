@@ -54,9 +54,9 @@ for bam in *.bam; do
   # includes sites with zero coverage, marked with no genotype (./.) and missing depth
   bcftools mpileup -Ou -f "$ref" -q 30 -Q 30 -d 10000 -a FORMAT/DP "$bam" | \
   bcftools call -m --ploidy 2 -Ou | \
-  bcftools +setGT -Ou -- -t 'FMT/DP<2' -n . | \
+  bcftools +setGT -Ou -- -t 'DP<2' -n . | \
   bcftools norm -f "$ref" -Ou | \
-  bcftools view -i 'FMT/DP>=1 || GT="./."' -Oz -o "${vcf_dir}/${sample}.vcf.gz"
+  bcftools view -i 'DP>=1 || GT="./."' -Oz -o "${vcf_dir}/${sample}.vcf.gz"
 
   # Step 2: Index the VCF file, forcing overwrite
   tabix -p vcf "${vcf_dir}/${sample}.vcf.gz" -f
