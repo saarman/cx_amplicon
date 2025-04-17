@@ -47,44 +47,29 @@ for vcf in *_norm.vcf.gz; do
 
   # Generate consensus, --missing N masks low-coverage positions (./. in VCF) with Ns 
   # bcftools view -i 'DP>=10' "${sample}_norm.vcf.gz"  # filters out positions with ./. genotypes, which prevents bcftools consensus from inserting Ns at those positions. That defeats the purpose of --missing N.
-  #awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${out_dir}/${gene}/${sample}_${gene}_consensus.fa"
-  bcftools view -r "$region" "${sample}_norm.vcf.gz" | \
+  # ... instead recode genotypes with depth < $min_depth to ./. 
+  bcftools +setGT "${sample}_norm.vcf.gz" -- -t "FMT/DP<10" -n . | \
+  bcftools view -r "$region" | \
   bcftools consensus --missing N -f "$ref" | \
   awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${out_dir}/${gene}/${sample}_${gene}_consensus.fa"
+  
+  # Haplotype A
+  # bcftools view -r "$region" -i 'FMT/DP>0' "${phased_dir}/${sample}_phased.vcf.gz" | \
+  # bcftools consensus --missing N --haplotype A -f "$ref" | \
+  # awk -v sample="${sample}" -v hap="A" '/^>/{print ">"sample"|haplotype_"hap; next} {print}' \
+  # > "${out_dir}/${gene}/${sample}_hapA.fa"
 
- # Haplotype A
- # bcftools view -r "$region" -i 'FMT/DP>0' "${phased_dir}/${sample}_phased.vcf.gz" | \
- # bcftools consensus --missing N --haplotype A -f "$ref" | \
- # awk -v sample="${sample}" -v hap="A" '/^>/{print ">"sample"|haplotype_"hap; next} {print}' \
- # > "${out_dir}/${gene}/${sample}_hapA.fa"
-
- # # Haplotype B
- # bcftools view -r "$region" -i 'FMT/DP>0' "${phased_dir}/${sample}_phased.vcf.gz" | \
- # bcftools consensus --missing N --haplotype B -f "$ref" | \
- # awk -v sample="${sample}" -v hap="B" '/^>/{print ">"sample"|haplotype_"hap; next} {print}' > "${out_dir}/${gene}/${sample}_hapB.fa"
+  # Haplotype B
+  # bcftools view -r "$region" -i 'FMT/DP>0' "${phased_dir}/${sample}_phased.vcf.gz" | \
+  # bcftools consensus --missing N --haplotype B -f "$ref" | \
+  # awk -v sample="${sample}" -v hap="B" '/^>/{print ">"sample"|haplotype_"hap; next} {print}' > "${out_dir}/${gene}/${sample}_hapB.fa"
 done
 
 # Combine all per-sample consensus FASTAs into one multi-FASTA file
 cat ${out_dir}/${gene}/*_consensus.fa > ${out_dir}/all_${gene}_consensus.fa
-#cat ${out_dir}/${gene}/*_hap*.fa > ${out_dir}/all_${gene}_haplotypes.fa
 
-# Ensure group write permissions for all relevant directories
-chmod -R g+w ../*
- # Haplotype A
- # bcftools view -r "$region" -i 'FMT/DP>0' "${phased_dir}/${sample}_phased.vcf.gz" | \
- # bcftools consensus --missing N --haplotype A -f "$ref" | \
- # awk -v sample="${sample}" -v hap="A" '/^>/{print ">"sample"|haplotype_"hap; next} {print}' \
- # > "${out_dir}/${gene}/${sample}_hapA.fa"
-
- # # Haplotype B
- # bcftools view -r "$region" -i 'FMT/DP>0' "${phased_dir}/${sample}_phased.vcf.gz" | \
- # bcftools consensus --missing N --haplotype B -f "$ref" | \
- # awk -v sample="${sample}" -v hap="B" '/^>/{print ">"sample"|haplotype_"hap; next} {print}' > "${out_dir}/${gene}/${sample}_hapB.fa"
-done
-
-# Combine all per-sample consensus FASTAs into one multi-FASTA file
-cat ${out_dir}/${gene}/*_consensus.fa > ${out_dir}/all_${gene}_consensus.fa
-#cat ${out_dir}/${gene}/*_hap*.fa > ${out_dir}/all_${gene}_haplotypes.fa
+# Combine all per-sample haplotype FASTAs into one multi-FASTA file
+# cat ${out_dir}/${gene}/*_hap*.fa > ${out_dir}/all_${gene}_haplotypes.fa
 
 # Ensure group write permissions for all relevant directories
 chmod -R g+w ../*
