@@ -45,19 +45,18 @@ cd "$bam_dir"
 for bam in *.bam; do
   sample=$(basename "$bam" .bam)  # Get sample name by stripping the .bam extension
 
-  # Index the BAM file if the index doesn't already exist
-  if [ ! -f "${bam}.bai" ] && [ ! -f "${sample}.bai" ]; then
-    samtools index "$bam"
-  fi
+  # Index the BAM file
+  samtools index "$bam"
 
   echo "Processing sample: $sample"
 
   # Step 1: Generate the VCF file with quality filtering using bcftools mpileup
   # includes sites with zero coverage, marked with no genotype (./.) and missing depth
-  bcftools mpileup -Ou -f "$ref" -q 30 -Q 30 -d 10000 -a FORMAT/DP,INFO/AD \
-  --include '1' "$bam" | \ 
-  bcftools call -c -Oz -o "${vcf_dir}/${sample}.vcf.gz"
-  
+  bcftools mpileup -Ou -f "$ref" -q 30 -Q 30 -d 10000 -a FORMAT/DP --include '1' "$bam" | \
+  bcftools call -m --ploidy 2 -Ou | \
+  bcftools +setGT -Ou -- -t 'FMT/DP<2' -n . | \
+  bcftools view -Oz -o "${vcf_dir}/${sample}.vcf.gz"
+
   # ANOTHER OPTION:
   # bcftools call -mv -Oz -o "${vcf_dir}/${sample}.vcf.gz" --output-type z --output "${vcf_dir}/${sample}.vcf.gz" --ploidy 2 --keep-alts --variants-only 0
 
@@ -68,6 +67,10 @@ for bam in *.bam; do
   
   # Step 3: Normalize indels to ensure proper representation
   bcftools norm -f "$ref" "${vcf_dir}/${sample}.vcf.gz" -Oz -o "${vcf_dir}/${sample}_norm.vcf.gz"
+
+  # CHECK: Are we creating correct (./.) with no data? Use this for one at a time...
+  # bcftools query -f '%GT\n' ../cx_amplicon_vcf/*_L001.vcf.gz | grep '\./\.'  
+  # bcftools query -f '%GT\n' ../cx_amplicon_vcf/*_norm.vcf.gz | grep '\./\.'
 
   # Step 4: Index the normalized VCF file
   tabix -p vcf "${vcf_dir}/${sample}_norm.vcf.gz"
