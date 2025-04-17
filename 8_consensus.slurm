@@ -36,6 +36,10 @@ for gene in cqm1 ace2 COi; do
   region=$(cat "$region_file")
 
   for vcf in *.vcf.gz; do
+    sample=$(basename "$vcf" .vcf.gz)
+
+    echo "Processing $sample for $gene..."
+
     # Stream and process, output VCF
     bcftools view -Ou "$vcf" | \
     bcftools +setGT -Ou -- -t q -i 'FORMAT/DP<5' -n . | \
@@ -46,12 +50,17 @@ for gene in cqm1 ace2 COi; do
     tabix -p vcf temp.vcf.gz
 
     # Extract region and make consensus
-    bcftools view -r "$region" temp.vcf.gz | \
-    bcftools consensus --missing N -f "$ref" - | \
+    bcftools view -r "$region" temp.vcf.gz -Ov -o temp_region.vcf
+
+    # Compress and index
+    bgzip -f temp_region.vcf
+    tabix -p vcf temp_region.vcf.gz
+
+    bcftools consensus --missing "-" --absent N -f "$ref" temp_region.vcf.gz - | \
     awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${out_dir}/${gene}/${sample}_${gene}_consensus.fa"
 
     # Clean up
-    rm temp.vcf.gz temp.vcf.gz.tbi
+    rm temp*.vcf.gz temp*.vcf.gz.tbi
   done
 
   # Combine all per-sample consensus FASTAs for this gene
