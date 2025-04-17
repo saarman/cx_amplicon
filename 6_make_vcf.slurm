@@ -61,35 +61,6 @@ for bam in *.bam; do
   # Step 2: Zip and Index the VCF file, forcing overwrite
   bgzip -c "${vcf_dir}/${sample}.vcf" > "${vcf_dir}/${sample}.vcf.gz"
   tabix -p vcf "${vcf_dir}/${sample}.vcf.gz" -f
-
-  # CHECK: Are we creating correct (./.) with no data? Use this...
-  # bcftools query -f '%GT\n' ../cx_amplicon_vcf/*_L001.vcf.gz | grep '\./\.'  
-  # bcftools query -f '%GT\n' ../cx_amplicon_vcf/*_norm.vcf.gz | grep '\./\.'
-  
-  # Future Improvement: Call variants using FreeBayes (haplotype-aware)
-  # SKIP (FOR NOW), THE REPORT ALL HAPLOTYPES IS NOT WORKING
-  # MAYBE CAN USE FREEBAYES AFTER THE VCF FILE IS ALREADY CREATED?
-  # MAYBE SHOULD USE A DIFFERENT PHASING SOFTWARE
-  #echo "Calling variants for: $sample using FreeBayes"
-  #freebayes -f "$ref" \
-  # --ploidy 2 \
-  # --min-base-quality 30 \
-  # --min-mapping-quality 30 \
-  # --min-coverage $min_depth \
-  # --genotype-qualities \
-  # --report-monomorphic \
-  # --report-all-haplotype-alleles \
-  # "$bam" > "${phased_dir}/${sample}_phased.vcf" || { echo "Error calling variants with FreeBayes for $sample"; continue; }
-  #
-  # Check if the raw VCF file was created successfully
-  #if [[ ! -s "${phased_dir}/${sample}_phased.vcf" ]]; then
-  #   echo "Error: Raw VCF file is empty for $sample"
-  #   continue
-  #fi
-  #
-  # Compress and index the phased VCF file
-  #bgzip -c "${phased_dir}/${sample}_phased.vcf" > "${phased_dir}/${sample}_phased.vcf.gz" || { echo "Error compressing phased VCF for $sample"; continue; }
-  #tabix -p vcf "${phased_dir}/${sample}_phased.vcf.gz" || { echo "Error indexing phased VCF for $sample"; continue; }
 done
 
 echo "All samples processed."
