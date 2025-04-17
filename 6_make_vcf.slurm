@@ -56,9 +56,10 @@ for bam in *.bam; do
   bcftools call -m --ploidy 2 -Ou | \
   bcftools +setGT -Ou -- -t q -i 'FORMAT/DP<2' -n . | \
   bcftools norm -f "$ref" -Ou | \
-  bcftools view -i 'DP>=1 || GT="./."' -Oz -o "${vcf_dir}/${sample}.vcf.gz"
+  bcftools view -i 'FMT/DP>=1 || GT="./."' -Ov -o "${vcf_dir}/${sample}.vcf"
 
-  # Step 2: Index the VCF file, forcing overwrite
+  # Step 2: Zip and Index the VCF file, forcing overwrite
+  bgzip -c "${vcf_dir}/${sample}.vcf" > "${vcf_dir}/${sample}.vcf.gz"
   tabix -p vcf "${vcf_dir}/${sample}.vcf.gz" -f
 
   # CHECK: Are we creating correct (./.) with no data? Use this...
