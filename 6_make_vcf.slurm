@@ -55,27 +55,17 @@ for bam in *.bam; do
   bcftools mpileup -Ou -f "$ref" -q 30 -Q 30 -d 10000 -a FORMAT/DP --include '1' "$bam" | \
   bcftools call -m --ploidy 2 -Ou | \
   bcftools +setGT -Ou -- -t 'FMT/DP<2' -n . | \
+  bcftools norm -f "$ref" -Ou | \
   bcftools view -Oz -o "${vcf_dir}/${sample}.vcf.gz"
 
-  # ANOTHER OPTION:
-  # bcftools call -mv -Oz -o "${vcf_dir}/${sample}.vcf.gz" --output-type z --output "${vcf_dir}/${sample}.vcf.gz" --ploidy 2 --keep-alts --variants-only 0
-
-  # Step 2: Filter the VCF by minimum per-sample depth
-  # SKIP!!! This filters out positions with ./. genotypes, which prevents bcftools consensus from inserting Ns at those positions... 
-  # ... defeating the purpose of --missing N in next script
-  # bcftools view -i "DP>=$min_depth" "${vcf_dir}/${sample}.vcf.gz" -Oz -o "${vcf_dir}/${sample}_filtered.vcf.gz"
-  
-  # Step 3: Normalize indels to ensure proper representation
-  bcftools norm -f "$ref" "${vcf_dir}/${sample}.vcf.gz" -Oz -o "${vcf_dir}/${sample}_norm.vcf.gz"
-
-  # CHECK: Are we creating correct (./.) with no data? Use this for one at a time...
+  # CHECK: Are we creating correct (./.) with no data? Use this...
   # bcftools query -f '%GT\n' ../cx_amplicon_vcf/*_L001.vcf.gz | grep '\./\.'  
   # bcftools query -f '%GT\n' ../cx_amplicon_vcf/*_norm.vcf.gz | grep '\./\.'
 
-  # Step 4: Index the normalized VCF file
-  tabix -p vcf "${vcf_dir}/${sample}_norm.vcf.gz"
+  # Step 2: Index the VCF file
+  tabix -p vcf "${vcf_dir}/${sample}.vcf.gz"
   
-  # Step 5: Call variants using FreeBayes (haplotype-aware)
+  # Step 3: Call variants using FreeBayes (haplotype-aware)
   # SKIP (FOR NOW), THE REPORT ALL HAPLOTYPES IS NOT WORKING
   # MAYBE CAN USE FREEBAYES AFTER THE VCF FILE IS ALREADY CREATED?
   # MAYBE SHOULD USE A DIFFERENT PHASING SOFTWARE
@@ -97,7 +87,6 @@ for bam in *.bam; do
   #fi
   #
   # Compress and index the phased VCF file
-  #echo "Compressing and indexing phased VCF: ${sample}_phased.vcf"
   #bgzip -c "${phased_dir}/${sample}_phased.vcf" > "${phased_dir}/${sample}_phased.vcf.gz" || { echo "Error compressing phased VCF for $sample"; continue; }
   #tabix -p vcf "${phased_dir}/${sample}_phased.vcf.gz" || { echo "Error indexing phased VCF for $sample"; continue; }
 done
