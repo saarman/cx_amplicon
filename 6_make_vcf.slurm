@@ -26,7 +26,7 @@ module load htslib
 # Define input/output paths and filenames
 bam_dir="./../cx_amplicon_bwa"                     # Directory containing input BAM files
 vcf_dir="./../cx_amplicon_vcf"                     # Directory to store per-sample VCF files
-phased_dir="./../cx_amplicon_phased"                  # Directory to store per-sample phased VCF files
+phased_dir="./../cx_amplicon_phased"               # Directory to store per-sample phased VCF files
 ref="../cx_amplicon_bwa/ref/ace2_cqm1_coi.fasta"   # Reference FASTA file
 
 # Ensure the output directory exists
