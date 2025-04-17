@@ -41,7 +41,7 @@ for gene in cqm1 ace2 COi; do
 
     bcftools +setGT -Ou -- -t q -i 'FORMAT/DP<5' -n . "$vcf" | \
     bcftools view -i 'FMT/DP>=2 || GT="./."' -r "$region" -Ou | \
-    bcftools consensus --missing N -f "$ref" | \
+    bcftools consensus --missing N -f "$ref" - | \
     awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${out_dir}/${gene}/${sample}_${gene}_consensus.fa"
 
   done
