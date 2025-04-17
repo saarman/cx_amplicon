@@ -56,7 +56,7 @@ for gene in cqm1 ace2 COi; do
     bgzip -f temp_region.vcf
     tabix -p vcf temp_region.vcf.gz
 
-    bcftools consensus --missing "-" --absent N -f "$ref" temp_region.vcf.gz - | \
+    bcftools consensus --missing N --absent N -f "$ref" temp_region.vcf.gz - | \
     awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${out_dir}/${gene}/${sample}_${gene}_consensus.fa"
 
     # Clean up
