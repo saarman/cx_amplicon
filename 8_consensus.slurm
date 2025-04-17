@@ -22,7 +22,7 @@ module load htslib
 # Define input/output paths and filenames
 vcf_dir="../cx_amplicon_vcf"            # Directory containing per-sample VCF files
 out_dir="../cx_amplicon_consensus"       # Directory to store consensus FASTA files
-ref="../cx_amplicon_bwa/ref/ace2_cqm1_coi.fasta"  # Reference FASTA file
+ref="../cx_amplicon_bwa/ref/ace2_cqm1_coi_clean.fasta"  # Reference FASTA file
 
 # Move into the VCF directory
 cd "$vcf_dir"
