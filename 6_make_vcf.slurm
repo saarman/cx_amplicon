@@ -32,10 +32,8 @@ ref="../cx_amplicon_bwa/ref/ace2_cqm1_coi.fasta"   # Reference FASTA file
 # Ensure the output directory exists
 mkdir -p "$vcf_dir"
 
-# Index the reference FASTA if not already indexed (creates .fai file)
-if [ ! -f "${ref}.fai" ]; then
-  samtools faidx "$ref"
-fi
+# Index the reference FASTA (creates .fai file)
+samtools faidx "$ref"
 
 # Apply group write permissions to all directories above (for collaboration or shared environments)
 chmod -R g+w ../*
