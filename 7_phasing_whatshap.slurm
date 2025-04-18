@@ -14,39 +14,46 @@
 # #SBATCH --mail-type=END
 # #SBATCH --mail-type=FAIL
 
-# Load required modules
+# Load modules
+module purge
 module load whatshap/2.6
-module load bcftools
 module load samtools
+module load bcftools
 
-# Define directories
-bam_dir="./../cx_amplicon_bwa"
-vcf_dir="./../cx_amplicon_vcf"
-phased_dir="./../cx_amplicon_phased"
+# Set directory paths
+bam_dir="../cx_amplicon_bwa"
+vcf_dir="../cx_amplicon_vcf"
+phased_dir="../cx_amplicon_phased"
 ref="../cx_amplicon_bwa/ref/ace2_cqm1_coi.fasta"
 
-# Make sure output directory exists
+# Make sure phased directory exists
 mkdir -p "$phased_dir"
 
-# Index reference if needed
-samtools faidx "$ref"
+# Loop through each VCF file
+for vcf_file in ${vcf_dir}/*.vcf.gz; do
+    sample=$(basename "$vcf_file" .vcf.gz)
+    bam_file="${bam_dir}/${sample}.bam"
+    rg_bam="${bam_dir}/${sample}.rg.bam"
 
-# Loop through each sample VCF and perform phasing
-cd "$vcf_dir"
-for vcf in *.vcf.gz; do
-    sample=$(basename "$vcf" .vcf.gz)
-    bam="${bam_dir}/${sample}.bam"
-    
     echo "Phasing $sample"
-    
-    whatshap phase \
-        --reference "$ref" \
-        --output "${phased_dir}/${sample}_phased.vcf" \
-        "$vcf" "$bam"
-    
-    # Compress and index phased VCF
-    bgzip -f "${phased_dir}/${sample}_phased.vcf"
-    tabix -p vcf "${phased_dir}/${sample}_phased.vcf.gz"
-done
 
-echo "Phasing complete."
+    # Add read group if not already added
+    if ! samtools view -H "$bam_file" | grep -q "^@RG"; then
+        echo "  No read group found — adding one"
+        samtools addreplacerg \
+            -r "@RG\tID:grp1\tSM:${sample}" \
+            -o "$rg_bam" \
+            "$bam_file"
+        samtools index "$rg_bam"
+    else
+        rg_bam="$bam_file"
+        echo "  Read group already present"
+    fi
+
+    # Run WhatsHap
+    whatshap phase \
+        -o "${phased_dir}/${sample}.phased.vcf.gz" \
+        --reference "$ref" \
+        "$vcf_file" \
+        "$rg_bam"
+done
