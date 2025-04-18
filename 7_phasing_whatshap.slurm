@@ -14,7 +14,8 @@
 # #SBATCH --mail-type=END
 # #SBATCH --mail-type=FAIL
 
-
+# === Load Required Modules ===
+module load singularity/4.1.1 
 
 # Paths
 CONTAINER="/shared/path/to/whatshap_latest.sif"   # Shared Singularity container location
