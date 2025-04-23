@@ -54,7 +54,7 @@ for gene in cqm1 ace2 COi; do
     echo "Generating consensus for $sample in $gene for DP2..."
     bcftools view -r "$region" "${sample}.vcf.gz" -Ov -o "${vcf_dir}/${gene}/${sample}_${gene}_DP2.vcf"
     bgzip -f "${vcf_dir}/${gene}/${sample}_${gene}_DP2.vcf"
-    tabix -p vcf "${vcf_dir}/${gene}/${sample}_${gene}_DP2.vcf.gz"
+    tabix -f -p vcf "${vcf_dir}/${gene}/${sample}_${gene}_DP2.vcf.gz"
     rm -f "${vcf_dir}/${gene}/${sample}_${gene}_DP2.vcf"             # remove vcf to save space
     name=$(bcftools query -l "${vcf_dir}/${gene}/${sample}_${gene}_DP2.vcf.gz") # find sample name in vcf file
     samtools faidx "$ref" "$region" | \
@@ -65,7 +65,7 @@ for gene in cqm1 ace2 COi; do
     echo "Generating consensus for $sample in $gene for DP5..."
     bcftools view -r "$region" "${sample}_DP5.vcf.gz" -Ov -o "${vcf_dir}/${gene}/${sample}_${gene}_DP5.vcf"
     bgzip -f "${vcf_dir}/${gene}/${sample}_${gene}_DP5.vcf"
-    tabix -p vcf "${vcf_dir}/${gene}/${sample}_${gene}_DP5.vcf.gz"
+    tabix -f -p vcf "${vcf_dir}/${gene}/${sample}_${gene}_DP5.vcf.gz"
     rm -f "${vcf_dir}/${gene}/${sample}_${gene}_DP5.vcf"             # remove vcf to save space
     name=$(bcftools query -l "${vcf_dir}/${gene}/${sample}_${gene}_DP5.vcf.gz") # find sample name in vcf file
     samtools faidx "$ref" "$region" | \
