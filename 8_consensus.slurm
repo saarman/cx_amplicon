@@ -64,47 +64,34 @@ for gene in cqm1 ace2 COi; do
     tabix -p vcf temp_region.vcf.gz
 
     bcftools consensus --missing N --absent N -f "$ref" temp_region.vcf.gz - | \
-    awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${out_dir}/${gene}/${sample}_${gene}_consensus.fa"
+    awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${out_dir}/${gene}/${sample}_${gene}_DP2_consensus.fa"
 
     # Clean up
     rm temp*.vcf.gz temp*.vcf.gz.tbi
   done
 
-  # Combine all per-sample consensus FASTAs for this gene
-  cat ${out_dir}/${gene}/*_consensus.fa > ${out_dir}/all_${gene}_consensus.fa
-
-done
-
-for gene in cqm1 ace2 COi; do
-  # Create output directories if they don't exist
-  mkdir -p "${out_dir}/${gene}"
-
-  # Define region
-  region_file="../cx_amplicon_scripts/ref_list_${gene}.txt"
-  region=$(cat "$region_file")
-
-  for vcf in *.vcf.gz; do
+for vcf in *.vcf.gz; do
     sample=$(basename "$vcf" .vcf.gz)
 
     echo "Processing $sample for $gene..."
 
     # Extract region and make consensus, choose what input here!!! Filter for depth beyond 2?
-    bcftools view -r "$region" ${sample}.vcf.gz -Ov -o temp_region.vcf
+    bcftools view -r "$region" ${sample}_DP5.vcf.gz -Ov -o temp_region.vcf
 
     # Compress and index
     bgzip -f temp_region.vcf
     tabix -p vcf temp_region.vcf.gz
 
     bcftools consensus --missing N --absent N -f "$ref" temp_region.vcf.gz - | \
-    awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${out_dir}/${gene}/${sample}_${gene}_consensus.fa"
+    awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${out_dir}/${gene}/${sample}_${gene}_DP5_consensus.fa"
 
     # Clean up
     rm temp*.vcf.gz temp*.vcf.gz.tbi
   done
 
   # Combine all per-sample consensus FASTAs for this gene
-  cat ${out_dir}/${gene}/*_consensus.fa > ${out_dir}/all_${gene}_consensus.fa
-
+  cat ${out_dir}/${gene}/*DP2_consensus.fa > ${out_dir}/all_${gene}_DP2_consensus.fa
+  cat ${out_dir}/${gene}/*DP5_consensus.fa > ${out_dir}/all_${gene}_DP5_consensus.fa
 done
 
 # Ensure group write permissions for all relevant directories
