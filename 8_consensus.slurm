@@ -41,18 +41,14 @@ for vcf in *.vcf.gz; do
   # Zip and index
   bgzip -f ${sample}_DP5.vcf
   tabix -p vcf ${sample}_DP5.vcf.gz
-done
 
-for gene in cqm1 ace2 COi; do
-  # Create output directories if they don't exist
-  mkdir -p "${out_dir}/${gene}"
+  for gene in cqm1 ace2 COi; do
+    # Create output directories if they don't exist
+    mkdir -p "${out_dir}/${gene}"
 
-  # Define region
-  region_file="../cx_amplicon_scripts/ref_list_${gene}.txt"
-  region=$(cat "$region_file")
-
-  for vcf in *.vcf.gz; do
-    sample=$(basename "$vcf" .vcf.gz)
+    # Define region
+    region_file="../cx_amplicon_scripts/ref_list_${gene}.txt"
+    region=$(cat "$region_file")
 
     echo "Processing $sample for $gene..."
 
@@ -68,12 +64,6 @@ for gene in cqm1 ace2 COi; do
 
     # Clean up
     rm temp*.vcf.gz temp*.vcf.gz.tbi
-  done
-
-for vcf in *.vcf.gz; do
-    sample=$(basename "$vcf" .vcf.gz)
-
-    echo "Processing $sample for $gene..."
 
     # Extract region and make consensus, choose what input here!!! Filter for depth beyond 2?
     bcftools view -r "$region" ${sample}_DP5.vcf.gz -Ov -o temp_region.vcf
