@@ -16,7 +16,7 @@
 
 # Load required software modules
 module load samtools/1.16
-module load bcftools/1.16
+module load bcftools/1.21   # to allow us to use --iupac-codes 
 module load htslib
 
 # Define input/output paths and filenames
