@@ -6,7 +6,7 @@
 #SBATCH --mem=24576
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=4
-#SBATCH --job-name="cqm1"
+#SBATCH --job-name="consensus"
 
 # Optional email notifications
 # #SBATCH --mail-user=emily.calhoun@usu.edu
