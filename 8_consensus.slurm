@@ -14,9 +14,12 @@
 # #SBATCH --mail-type=END
 # #SBATCH --mail-type=FAIL
 
-# Load required software modules
+# Load required software modules, bcftools/1.21 allow us to use --iupac-codes 
+module load gcc/11.2.0
+module load gcc/11.2.0-cpu
+module load gcc/11.2.0-gpu
 module load samtools/1.16
-module load bcftools/1.21   # to allow us to use --iupac-codes 
+module load bcftools/1.21   
 module load htslib
 
 # Define input/output paths and filenames
