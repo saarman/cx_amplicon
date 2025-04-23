@@ -30,7 +30,7 @@ for vcf in $(bcftools query -l *.vcf.gz | sort | uniq); do
   sample=$(basename "$vcf" .bam)
   if [ ! -f "${sample}_DP5.vcf.gz" ]; then
     echo "Filtering $sample to create ${sample}_DP5.vcf.gz"
-    bcftools view -Ou "$vcf" | \
+    bcftools view -Ou "${sample}.vcf.gz" | \
       bcftools +setGT -Ou -- -t q -i 'FORMAT/DP<5' -n . | \
       bcftools view -i 'FMT/DP>=2 || GT="./."' -Ov -o ${sample}_DP5.vcf
   bgzip -f ${sample}_DP5.vcf
