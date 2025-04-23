@@ -58,7 +58,7 @@ for gene in cqm1 ace2 COi; do
     rm -f "${vcf_dir}/${gene}/${sample}_${gene}_DP2.vcf"             # remove vcf to save space
     name=$(bcftools query -l "${vcf_dir}/${gene}/${sample}_${gene}_DP2.vcf.gz") # find sample name in vcf file
     samtools faidx "$ref" "$region" | \
-    bcftools consensus --missing N --absent "-" --sample "$name" "${vcf_dir}/${gene}/${sample}_${gene}_DP2.vcf.gz" | \
+    bcftools consensus --missing N --absent "-" --haplotype IUPAC --sample "$name" "${vcf_dir}/${gene}/${sample}_${gene}_DP2.vcf.gz" | \
       awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${out_dir}/${gene}/${sample}_${gene}_DP2_consensus.fa"
 
     # From DP5-filtered VCF
@@ -69,7 +69,7 @@ for gene in cqm1 ace2 COi; do
     rm -f "${vcf_dir}/${gene}/${sample}_${gene}_DP5.vcf"             # remove vcf to save space
     name=$(bcftools query -l "${vcf_dir}/${gene}/${sample}_${gene}_DP5.vcf.gz") # find sample name in vcf file
     samtools faidx "$ref" "$region" | \
-    bcftools consensus --missing N --absent "-" --sample "$name" "${vcf_dir}/${gene}/${sample}_${gene}_DP5.vcf.gz" | \
+    bcftools consensus --missing N --absent "-" --haplotype IUPAC --sample "$name" "${vcf_dir}/${gene}/${sample}_${gene}_DP5.vcf.gz" | \
       awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${out_dir}/${gene}/${sample}_${gene}_DP5_consensus.fa"
   done
 
