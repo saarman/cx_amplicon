@@ -51,7 +51,7 @@ for bam in *.bam; do
   echo "Processing sample: $sample"
 
   # Step 1: Generate the VCF file with quality filtering using bcftools mpileup
-  # includes sites with zero coverage, marked with no genotype (./.) and missing depth
+  # includes sites with less than 2 coverage, marked with no genotype (./.) and missing depth
   bcftools mpileup -Ou -f "$ref" -q 30 -Q 30 -d 10000 -a FORMAT/DP "$bam" | \
   bcftools call -m --ploidy 2 -Ou | \
   bcftools +setGT -Ou -- -t q -i 'FORMAT/DP<2' -n . | \
