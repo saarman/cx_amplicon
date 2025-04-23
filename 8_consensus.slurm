@@ -27,7 +27,7 @@ ref="../cx_amplicon_bwa/ref/ace2_cqm1_coi.fasta"  # Reference FASTA file
 # Step 1: Generate depth-filtered VCFs once
 cd "$vcf_dir"
 for vcf in $(bcftools query -l *.vcf.gz | sort | uniq); do
-  sample=$(basename "$name" .bam)
+  sample=$(basename "$vcf" .bam)
   if [ ! -f "${sample}_DP5.vcf.gz" ]; then
     echo "Filtering $sample to create ${sample}_DP5.vcf.gz"
     bcftools view -Ou "$vcf" | \
