@@ -27,6 +27,22 @@ ref="../cx_amplicon_bwa/ref/ace2_cqm1_coi_clean.fasta"  # Reference FASTA file
 # Move into the VCF directory
 cd "$vcf_dir"
 
+# Filter VCF for depth as you wish
+for vcf in *.vcf.gz; do
+  sample=$(basename "$vcf" .vcf.gz)
+  
+  echo "Filtering $sample for depth..."
+
+  # Stream and process, output VCF filtering for depth
+  bcftools view -Ou "$vcf" | \
+  bcftools +setGT -Ou -- -t q -i 'FORMAT/DP<5' -n . | \
+  bcftools view -i 'FMT/DP>=2 || GT="./."' -Ov -o ${sample}_DP5.vcf
+  
+  # Zip and index
+  bgzip -f ${sample}_DP5.vcf
+  tabix -p vcf ${sample}_DP5.vcf.gz
+done
+
 for gene in cqm1 ace2 COi; do
   # Create output directories if they don't exist
   mkdir -p "${out_dir}/${gene}"
@@ -40,17 +56,8 @@ for gene in cqm1 ace2 COi; do
 
     echo "Processing $sample for $gene..."
 
-    # Stream and process, output VCF
-    bcftools view -Ou "$vcf" | \
-    bcftools +setGT -Ou -- -t q -i 'FORMAT/DP<5' -n . | \
-    bcftools view -i 'FMT/DP>=2 || GT="./."' -Ov -o temp.vcf
-
-    # Compress and index
-    bgzip -f temp.vcf
-    tabix -p vcf temp.vcf.gz
-
-    # Extract region and make consensus
-    bcftools view -r "$region" temp.vcf.gz -Ov -o temp_region.vcf
+    # Extract region and make consensus, choose what input here!!! Filter for depth beyond 2?
+    bcftools view -r "$region" ${sample}.vcf.gz -Ov -o temp_region.vcf
 
     # Compress and index
     bgzip -f temp_region.vcf
