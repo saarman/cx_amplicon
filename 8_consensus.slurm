@@ -41,7 +41,7 @@ done
 # Step 2: Loop over each gene
 for gene in cqm1 ace2 COi; do
   echo "Processing gene: $gene"
-  region_file="../cx_amplicon_scripts/ref_list_${gene}.txt"
+  region_file="ref_list_${gene}.txt"
   region=$(cat "$region_file")
   mkdir -p "${out_dir}/${gene}"
   mkdir -p "${vcf_dir}/${gene}"
@@ -56,8 +56,8 @@ for gene in cqm1 ace2 COi; do
     bgzip -f "${vcf_dir}/${gene}/${sample}_${gene}_DP2.vcf"
     tabix -p vcf "${vcf_dir}/${gene}/${sample}_${gene}_DP2.vcf.gz"
     rm -f "${vcf_dir}/${gene}/${sample}_${gene}_DP2.vcf"             # remove vcf to save space
-    bcftools consensus --missing N --absent N -f "$ref" "${vcf_dir}/${gene}/${sample}_${gene}_DP2.vcf.gz" | \
-      awk -v sample="$sample" -v gene="$gene" '/^>/{print ">"sample"|"gene} !/^>/' > "${out_dir}/${gene}/${sample}_${gene}_DP2_consensus.fa"
+    bcftools consensus --missing N --absent "-" -f "$ref" "${vcf_dir}/${gene}/${sample}_${gene}_DP2.vcf.gz" | \
+      awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${out_dir}/${gene}/${sample}_${gene}_DP2_consensus.fa"
 
     # From DP5-filtered VCF
     echo "Generating consensus for $sample in $gene for DP5..."
@@ -65,8 +65,8 @@ for gene in cqm1 ace2 COi; do
     bgzip -f "${vcf_dir}/${gene}/${sample}_${gene}_DP5.vcf"
     tabix -p vcf "${vcf_dir}/${gene}/${sample}_${gene}_DP5.vcf.gz"
     rm -f "${vcf_dir}/${gene}/${sample}_${gene}_DP5.vcf"             # remove vcf to save space
-    bcftools consensus --missing N --absent N -f "$ref" "${vcf_dir}/${gene}/${sample}_${gene}_DP5.vcf.gz" | \
-      awk -v sample="$sample" -v gene="$gene" '/^>/{print ">"sample"|"gene} !/^>/' > "${out_dir}/${gene}/${sample}_${gene}_DP5_consensus.fa"
+    bcftools consensus --missing N --absent "-" -f "$ref" "${vcf_dir}/${gene}/${sample}_${gene}_DP5.vcf.gz" | \
+      awk -v sample="$sample" '/^>/{print ">"sample"|"substr($0,2)} !/^>/' > "${out_dir}/${gene}/${sample}_${gene}_DP5_consensus.fa"
   done
 
   # Combine all consensus outputs for this gene
