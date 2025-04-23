@@ -78,8 +78,10 @@ for vcf in *.vcf.gz; do
     # Clean up
     rm temp*.vcf.gz temp*.vcf.gz.tbi
   done
+done
 
-  # Combine all per-sample consensus FASTAs for this gene
+# Combine all consensus FASTAs per gene after all samples are processed
+for gene in cqm1 ace2 COi; do
   cat ${out_dir}/${gene}/*DP2_consensus.fa > ${out_dir}/all_${gene}_DP2_consensus.fa
   cat ${out_dir}/${gene}/*DP5_consensus.fa > ${out_dir}/all_${gene}_DP5_consensus.fa
 done
