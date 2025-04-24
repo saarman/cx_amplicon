@@ -15,7 +15,6 @@
 # #SBATCH --mail-type=FAIL
 
 # Load modules
-module purge
 module load whatshap/2.6
 module load samtools
 module load bcftools
