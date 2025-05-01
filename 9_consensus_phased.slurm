@@ -62,7 +62,7 @@ for gene in cqm1 ace2 COi; do
     tabix -f -p vcf "${vcf_dir}/${gene}/${sample}_${gene}_DP5.phased.vcf.gz"
     rm -f "${vcf_dir}/${gene}/${sample}_${gene}_DP5.phased.vcf"
 
-    name=$(bcftools query -l "${vcf_dir}/${gene}/phased/${sample}_${gene}.vcf.gz")
+    name=$(bcftools query -l "${vcf_dir}/${gene}/${sample}_${gene}_DP5.phased.vcf.gz")
 
     # Check for phased GT
     phased=$(bcftools query -f '[%GT]\n' "${vcf_dir}/${gene}/${sample}_${gene}_DP5.phased.vcf.gz" | grep "|" | wc -l)
@@ -76,7 +76,7 @@ for gene in cqm1 ace2 COi; do
 
       samtools faidx "$ref" "$region" | \
       bcftools consensus --missing N --absent "-" --sample "$name" --haplotype 2 "${vcf_dir}/${gene}/${sample}_${gene}_DP5.phased.vcf.gz" | \
-      awk -v sample="$sample" '/^>/{print ">"sample"|hapB"} !/^>/' > "${out_dir}/${gene}/phased/${sample}_${gene}_DP5_phased_consensus_hapB.fa"
+      awk -v sample="$sample" '/^>/{print ">"sample"|hapB"} !/^>/' > "${out_dir}/${gene}/${sample}_${gene}_DP5_phased_consensus_hapB.fa"
 
     else
       echo "No phased genotypes for $sample. Creating single consensus."
