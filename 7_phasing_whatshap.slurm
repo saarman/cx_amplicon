@@ -56,7 +56,7 @@ for vcf_file in ${vcf_dir}/*.vcf.gz; do
     whatshap phase \
         -o "${phased_dir}/${sample}.phased.vcf.gz" \
         --reference "$ref" \
-        --ignore-read-groups
+        --ignore-read-groups \
         "$vcf_file" \
         "$bam_file"
 done
