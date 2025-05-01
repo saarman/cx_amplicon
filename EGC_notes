@@ -103,3 +103,10 @@ Submitted batch job 4159430
 .rg files messing things up 
 
 Submitted batch job 4159593
+
+
+sbatch 9_consensus_phased.slurm 
+Submitted batch job 4160311
+
+sbatch 8_consensus.slurm 
+Submitted batch job 4160314
