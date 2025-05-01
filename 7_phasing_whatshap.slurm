@@ -32,27 +32,28 @@ mkdir -p "$phased_dir"
 for vcf_file in ${vcf_dir}/*.vcf.gz; do
     sample=$(basename "$vcf_file" .vcf.gz)
     bam_file="${bam_dir}/${sample}.bam"
-    rg_bam="${bam_dir}/${sample}.rg.bam"
+  #  rg_bam="${bam_dir}/${sample}.rg.bam"
 
     echo "Phasing $sample"
 
     # Add read group if not already added
-    if ! samtools view -H "$bam_file" | grep -q "^@RG"; then
-        echo "  No read group found — adding one"
-        samtools addreplacerg \
-            -r "@RG\tID:grp1\tSM:${sample}" \
-            -o "$rg_bam" \
-            "$bam_file"
-        samtools index "$rg_bam"
-    else
-        rg_bam="$bam_file"
-        echo "  Read group already present"
-    fi
+#    if ! samtools view -H "$bam_file" | grep -q "^@RG"; then
+#        echo "  No read group found — adding one"
+ #       samtools addreplacerg \
+ #           -r "@RG\tID:grp1\tSM:${sample}" \
+ #           -o "$rg_bam" \
+ #           "$bam_file"
+ #       samtools index "$rg_bam"
+ #   else
+  #      rg_bam="$bam_file"
+   #     echo "  Read group already present"
+  #  fi
 
     # Run WhatsHap
     whatshap phase \
         -o "${phased_dir}/${sample}.phased.vcf.gz" \
         --reference "$ref" \
+        --ignore-read-groups
         "$vcf_file" \
-        "$rg_bam"
+        "$bam_file"
 done
