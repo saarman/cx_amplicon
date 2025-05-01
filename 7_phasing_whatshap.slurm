@@ -28,6 +28,9 @@ ref="../cx_amplicon_bwa/ref/ace2_cqm1_coi.fasta"
 # Make sure phased directory exists
 mkdir -p "$phased_dir"
 
+# Fix permissions
+chmod -R g+w ../*
+
 # Loop through each VCF file
 for vcf_file in ${vcf_dir}/*.vcf.gz; do
     sample=$(basename "$vcf_file" .vcf.gz)
@@ -57,3 +60,6 @@ for vcf_file in ${vcf_dir}/*.vcf.gz; do
         "$vcf_file" \
         "$bam_file"
 done
+
+# Fix permissions
+chmod -R g+w ../*
