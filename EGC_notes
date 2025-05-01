@@ -96,3 +96,7 @@ Troubleshooting 7-phasing-whatshap slurm
 
 Submitted batch job 4158960
 
+-was running twice and using read groups. going to scancel and try again with ignoring read groups flag
+
+Submitted batch job 4159430
+
