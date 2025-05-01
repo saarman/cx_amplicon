@@ -27,6 +27,9 @@ out_dir="../cx_amplicon_consensus"                # Directory to store consensus
 ref="../cx_amplicon_bwa/ref/ace2_cqm1_coi.fasta"  # Reference FASTA file
 vcf_dir="../cx_amplicon_phased"                # Directory containing per-sample phased VCF files
 
+  # Fix permissions
+  chmod -R g+w ../*
+
 # Step 1: Generate depth-filtered VCFs once
 cd "$vcf_dir"
 for vcf in $(bcftools query -l *.phased.vcf.gz | sort | uniq); do
