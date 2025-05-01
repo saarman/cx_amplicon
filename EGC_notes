@@ -88,3 +88,11 @@ Emily tried adding to line 52 of 7a - only created consensus with a bunch of Ns
 # bcftools consensus --missing N -f <(echo ">${sample}" && yes N | head -n 1000) "${sample}.vcf.gz" | \
 # awk -v sample="$sample" -v region="$region" '/^>/{print ">"sample"|"region} !/^>/' > \
 # "${out_dir}/${gene}/${sample}_${gene}_${clean_region}_consensus.fa"
+
+
+................... forgot to record notes ........
+5-1-25
+Troubleshooting 7-phasing-whatshap slurm
+
+Submitted batch job 4158960
+
