@@ -104,9 +104,16 @@ Submitted batch job 4159430
 
 Submitted batch job 4159593
 
+7 working - now 9 is not
+
 
 sbatch 9_consensus_phased.slurm 
 Submitted batch job 4160311
 
 sbatch 8_consensus.slurm 
 Submitted batch job 4160314
+
+Tried a few more things. It is not looping over the vcf files correctly. 
+
+
+
